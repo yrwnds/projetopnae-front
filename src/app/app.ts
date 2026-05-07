@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Router, RouterOutlet} from '@angular/router';
+import {AuthService} from '../core/services/auth-service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,9 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('projetopnae-front');
+  constructor(private authService: AuthService, private router: Router){
+    if(this.authService.isLogged()){
+      this.router.navigate(['/home'])
+    }
+  }
 }
