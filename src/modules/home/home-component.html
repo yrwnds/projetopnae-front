@@ -1,1 +1,26 @@
 <p>home-component works!</p>
+<div>
+  <a routerLink="edital">Testar edital</a>
+</div>
+<div>
+  <a routerLink="agricultor">Testar agricultor</a>
+</div>
+<div>
+  <a routerLink="entrega">Testar entrega</a>
+</div>
+<div>
+  <a routerLink="tipoalimenticio">Testar tipo alimenticio</a>
+</div>
+<div>
+  <a routerLink="cronograma">Testar cronograma</a>
+</div>
+<button mat-button (click)="logout()">
+  <mat-icon>logout</mat-icon>
+  Sair
+</button>
+
+
+<div class="content">
+  <router-outlet></router-outlet>
+</div>
+

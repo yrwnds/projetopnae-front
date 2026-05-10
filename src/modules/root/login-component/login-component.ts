@@ -49,7 +49,7 @@ export class LoginComponent {
         },
         error: (err) => {
           console.log('Login falhou ', err);
-          this.errorMessage =  "ERRO: Emasil ou senha incorretos."
+          this.errorMessage =  "ERRO: Email ou senha incorretos."
         }
       });
 

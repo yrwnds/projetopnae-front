@@ -1,1 +1,16 @@
 <p>edital-component works!</p>
+<div>
+  @if(e.length === 0 ){
+    <p>Nenhum resultado encontrado.</p>
+  } @else{
+    @for(e of e ; track e.id){
+
+      <div>
+        <div>
+          <h5 class="card-title">{{  e.nome  }}</h5>
+        </div>
+      </div>
+    }
+  }
+
+</div>

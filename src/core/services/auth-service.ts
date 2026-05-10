@@ -49,7 +49,7 @@ export class AuthService {
     return decoded.role
   }
 
-  getUserMat(){
+  getUserEmail(){
     const token = this.getToken()
     // @ts-ignore
     const payload = token.split('.')[1];

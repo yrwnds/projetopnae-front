@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ErrorHandler} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
 import {Router, RouterLink} from '@angular/router';
@@ -18,11 +18,12 @@ import {UsuarioService} from '../../../core/services/usuario-service';
     RouterLink,
     MatLabel,
     ReactiveFormsModule,
-    MatError
+    MatError,
   ],
   templateUrl: './cadastro-component.html',
   styleUrl: './cadastro-component.css',
 })
+
 export class CadastroComponent {
   form: FormGroup;
   errorMessage = ''
@@ -50,7 +51,8 @@ export class CadastroComponent {
           },
           error: (err) => {
             console.error('Erro ao adicionar usuario: ', err);
-            this.errorMessage = "ERRO: " + JSON.stringify(err).split(',')[13]
+
+            this.errorMessage = 'Erro: '+ err.message + ' '+ JSON.stringify(err.error, ['message']);
           }
         }
       )
