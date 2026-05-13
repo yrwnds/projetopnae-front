@@ -15,6 +15,9 @@ import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
 import {MatInput} from '@angular/material/input';
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
+import {UsuarioService} from '../../../core/services/usuario-service';
+import {EditalService} from '../../../core/services/edital-service';
+import {Edital} from '../../../core/models/edital';
 
 @Component({
   selector: 'app-entrega-component',
@@ -35,11 +38,11 @@ import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
   styleUrl: './entrega-component.css',
 })
 export class EntregaComponent {
-  constructor(private fb: FormBuilder, private agricultorService: AgricultorService, private entregaService: EntregaService, private produtoService: ProdutoentregaService, private authService: AuthService, private tipoAlimenticioService: TipoalimenticioService ) {
+  constructor(private fb: FormBuilder, private editalService: EditalService, private usuarioService: UsuarioService, private agricultorService: AgricultorService, private entregaService: EntregaService, private produtoService: ProdutoentregaService, private authService: AuthService, private tipoAlimenticioService: TipoalimenticioService ) {
     this.formEnt = this.fb.group(
       {
         id: [null],
-        data: [null, [Validators.required]],
+        dataentrega: [null, [Validators.required]],
         edital: [null, [Validators.required]],
         usuario: [null, [Validators.required]]
       }
@@ -65,13 +68,25 @@ export class EntregaComponent {
   p: Produtoentrega[] = [];
   t: Tipoalimenticio[] = [];
   a: Agricultor[] = [];
+  ed: Edital[] = [];
 
   isAdding: boolean = false;
   isEditandoProduto: boolean = false;
+  isAddingEnt: boolean = false;
 
-  entregaProd: Entrega | null = null;
+  entregaId: number = 0;
 
   ngOnInit() {
+    this.editalService.getAll().subscribe(
+      {
+        next: (ed) => {
+          this.ed = ed;
+        },
+        error: (err) => {
+          console.error('Erro ao buscar editais: ', err);
+        }
+      }
+    );
     this.entregaService.getAll().subscribe(
       {
         next: (e) => {
@@ -131,10 +146,36 @@ export class EntregaComponent {
     })
   }
 
-  addingProdutos(entregaProd: Entrega){
+  addingProdutos(entregaId: number){
     this.isAdding = true;
-    this.entregaProd = entregaProd;
-    console.log("EntregaProd = " + this.entregaProd.id)
+    this.entregaId = entregaId;
+    console.log("EntregaProd = " + this.entregaId)
+  }
+
+  addingEntregas(){
+    this.isAddingEnt = true;
+  }
+
+  addEntrega(){
+    console.log('Validando form addentrega')
+    console.log('dados:' + JSON.stringify(this.formEnt.value))
+    if(this.formEnt.valid){
+      const{id, edital, dataentrega, usuario} = this.formEnt.value;
+
+      this.entregaService.create({id, edital, dataentrega, usuario} as Entrega).subscribe(
+        {
+          next: () => {
+            console.log('Criou com sucesso.');
+            this.successMessage = 'Sucesso.';
+            this.ngOnInit();
+          },
+          error: (err) => {
+            this.errorMessage = "Erro. " + JSON.stringify(err.error, ['message']);
+            console.error('Erro: ', err);
+          }
+        }
+      )
+    }
   }
 
   addProduto(){
@@ -161,17 +202,6 @@ export class EntregaComponent {
     }
   }
 
-  addEntrega(){
-    console.log('Validando form adicionarentrega...');
-    console.log('dados: ' + JSON.stringify(this.formEnt.value))
-    if(this.formEnt.valid){
-
-    } else{
-      console.log('Form não valida');
-      this.errorMessage = "Erro. Verifique a validade dos dados.";
-    }
-  }
-
   clear(){
     this.errorMessage = ''
     this.successMessage = ''
@@ -179,6 +209,17 @@ export class EntregaComponent {
 
   resetFormProd() {
     this.formProd.reset();
+    this.isAdding = false;
+  }
+
+  resetFormEnt(){
+    this.formEnt.reset();
+    this.isAddingEnt = false;
+  }
+
+  getUsuario(){
+    const Usulogado = this.authService.getUserEmail();
+    return this.usuarioService.buscarPorEmail(Usulogado);
   }
 
   protected readonly JSON = JSON;

@@ -37,4 +37,8 @@ export class CronogramaService {
   delete(id: number): Observable<void> {
     return this.httpClient.delete<void>(env.apiUrl + '/cronograma/' + id);
   }
+
+  create(cronograma: Cronograma): Observable<Cronograma> {
+    return this.httpClient.post<Cronograma>(env.apiUrl + '/cronograma', cronograma);
+  }
 }

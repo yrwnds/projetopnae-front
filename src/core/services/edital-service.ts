@@ -30,4 +30,8 @@ export class EditalService {
   delete(id: number): Observable<void> {
     return this.httpClient.delete<void>(env.apiUrl + '/edital/' + id);
   }
+
+  create(edital: Edital): Observable<Edital> {
+    return this.httpClient.post<Edital>(env.apiUrl + '/edital', edital);
+  }
 }

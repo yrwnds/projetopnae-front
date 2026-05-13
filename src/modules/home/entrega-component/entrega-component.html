@@ -1,4 +1,39 @@
 <p>entrega-component works!</p>
+<button (click)="addingEntregas()">Add entrega</button>
+@if(isAddingEnt){
+  <form [formGroup]="formEnt" (ngSubmit)="addEntrega()">
+    <div class="row">
+      <p>precisa de usuarioId</p>
+      <mat-form-field class="col-md-10 mb-3">
+        <mat-label>Edital</mat-label>
+        <mat-select formControlName="edital">
+          @for (ed of ed ; track ed.id){
+            <mat-option [value]="ed">
+              {{ ed.nome }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-error>Edital é obrigatório.</mat-error>
+      </mat-form-field>
+      <mat-form-field  class="col-3">
+        <mat-label>Data</mat-label>
+        <input matInput type="date" formControlName="dataentrega">
+        <mat-error>Data é obrigatório.</mat-error>
+      </mat-form-field>
+      <hr class="mb-4">
+      <div class="row">
+        <button class="btn btn-primary" type="submit">
+          Adicionar Entrega
+        </button>
+        <button class="btn btn-outline-dark mt-4" (click)="resetFormEnt()">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </form>
+}
+
+
 <table>
   <tr>
     <th>Edital</th>
@@ -43,7 +78,7 @@
 @if(isAdding){
   <form [formGroup]="formProd" (ngSubmit)="addProduto()">
     <div class="row">
-      <input type="text" formControlName="entrega" value="{{JSON.stringify(entregaProd)}}">
+      <input type="text" formControlName="entrega" value="{{entregaId}}">
       <mat-form-field class="col-md-6 mb-3">
         <mat-label>Observação</mat-label>
         <input matInput type="text" formControlName="observacao">
@@ -85,7 +120,7 @@
         <button class="btn btn-primary" type="submit">
           Adicionar Produto
         </button>
-        <button class="btn btn-outline-dark mt-4" (onclick)="resetFormProd()">
+        <button class="btn btn-outline-dark mt-4" (click)="resetFormProd()">
           Cancelar
         </button>
     </div>

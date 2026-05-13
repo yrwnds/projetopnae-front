@@ -11,6 +11,10 @@ export class EntregaService {
   constructor(private httpClient: HttpClient){
   }
 
+  create(entrega: Entrega): Observable<Entrega> {
+    return this.httpClient.post<Entrega>(env.apiUrl + '/entrega', entrega);
+  }
+
   getAll(): Observable<Entrega[]>{
     return this.httpClient.get<Entrega[]>(env.apiUrl + '/entrega/listar');
   }
