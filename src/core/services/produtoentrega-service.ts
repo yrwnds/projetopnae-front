@@ -23,8 +23,8 @@ export class ProdutoentregaService {
     return this.httpClient.get<Produtoentrega>(env.apiUrl + '/produtoentrega/id/' + id);
   }
 
-  buscarPorIdEntrega(identrega: string): Observable<Produtoentrega>{
-    return this.httpClient.get<Produtoentrega>(env.apiUrl + '/produtoentrega/identrega/' + identrega);
+  buscarPorIdEntrega(identrega: number): Observable<Produtoentrega[]>{
+    return this.httpClient.get<Produtoentrega[]>(env.apiUrl + '/produtoentrega/identrega/' + identrega);
   }
 
   create(produtoentrega: Produtoentrega): Observable<Produtoentrega> {

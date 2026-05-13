@@ -1,1 +1,94 @@
 <p>entrega-component works!</p>
+<table>
+  <tr>
+    <th>Edital</th>
+    <th>Data</th>
+    <th>Ações</th>
+  </tr>
+  @if (e.length === 0) {
+  <p>Nenhum resultado encontrado.</p>
+} @else {
+  @for (e of e; track e.id) {
+
+    <tr class="clickable" (click)="buscaProdutosPorId(e)">
+      <td>{{ e.edital.nome }}</td>
+      <td>{{ e.dataentrega }}</td>
+      <td><button (click)="addingProdutos(e)">Add produto</button></td>
+    </tr>
+
+  }
+}
+</table>
+<table>
+  <tr>
+    <th>Tipo alimenticio</th>
+    <th>Observacao</th>
+    <th>Qtd.</th>
+    <th>Und.</th>
+    <th>Agricultor</th>
+  </tr>
+  @if (p.length === 0) {
+    <p>Clique em uma entrega para mostrar os produtos.</p>
+  } @else {
+    @for (p of p; track p.id) {
+      <td>{{p.tipo.nome}}</td>
+      <td>{{p.observacao}}</td>
+      <td>{{p.qtd}}</td>
+      <td>{{p.tipound}}</td>
+      <td>{{p.agricultor.nome}}</td>
+    }
+  }
+</table>
+
+@if(isAdding){
+  <form [formGroup]="formProd" (ngSubmit)="addProduto()">
+    <div class="row">
+      <input type="text" formControlName="entrega" value="{{JSON.stringify(entregaProd)}}">
+      <mat-form-field class="col-md-6 mb-3">
+        <mat-label>Observação</mat-label>
+        <input matInput type="text" formControlName="observacao">
+      </mat-form-field>
+      <mat-form-field class="col-md-10 mb-3">
+        <mat-label>Agricultor</mat-label>
+        <mat-select formControlName="agricultor">
+          @for (agr of a ; track agr.id){
+            <mat-option [value]="agr">
+              {{ agr.nome }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-error>Tipo alimentício é obrigatório.</mat-error>
+      </mat-form-field>
+      <mat-form-field class="col-md-10 mb-3">
+        <mat-label>Tipo alimentício</mat-label>
+        <mat-select formControlName="tipo">
+          @for (tipo of t ; track tipo.id){
+            <mat-option [value]="tipo">
+              {{ tipo.nome }}
+            </mat-option>
+          }
+        </mat-select>
+        <mat-error>Tipo alimentício é obrigatório.</mat-error>
+      </mat-form-field>
+      <mat-form-field  class="col-3">
+        <mat-label>Quantidade</mat-label>
+        <input matInput type="number" formControlName="qtd">
+        <mat-error>Deve ser número.</mat-error>
+      </mat-form-field>
+      <mat-form-field class="col-md-9">
+        <mat-label>Tipo de unidade</mat-label>
+        <input matInput type="text" formControlName="tipound">
+        <mat-error>Tipo de unidade é obrigatório (Exemplo: Kg, Unidade)</mat-error>
+      </mat-form-field>
+      <hr class="mb-4">
+      <div class="row">
+        <button class="btn btn-primary" type="submit">
+          Adicionar Produto
+        </button>
+        <button class="btn btn-outline-dark mt-4" (onclick)="resetFormProd()">
+          Cancelar
+        </button>
+    </div>
+    </div>
+  </form>
+}
