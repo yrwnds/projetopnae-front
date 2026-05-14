@@ -3,7 +3,6 @@
 @if(isAddingEnt){
   <form [formGroup]="formEnt" (ngSubmit)="addEntrega()">
     <div class="row">
-      <p>precisa de usuarioId</p>
       <mat-form-field class="col-md-10 mb-3">
         <mat-label>Edital</mat-label>
         <mat-select formControlName="edital">
@@ -44,13 +43,13 @@
   <p>Nenhum resultado encontrado.</p>
 } @else {
   @for (e of e; track e.id) {
-
-    <tr class="clickable" (click)="buscaProdutosPorId(e)">
-      <td>{{ e.edital.nome }}</td>
-      <td>{{ e.dataentrega }}</td>
-      <td><button (click)="addingProdutos(e)">Add produto</button></td>
-    </tr>
-
+    @if(e.usuario.id === usuLogado){
+      <tr class="clickable" (click)="buscaProdutosPorId(e)">
+        <td>{{ e.edital.nome }}</td>
+        <td>{{ e.dataentrega }}</td>
+        <td><button (click)="addingProdutos(e.id)">Add produto</button></td>
+      </tr>
+    }
   }
 }
 </table>
@@ -78,7 +77,6 @@
 @if(isAdding){
   <form [formGroup]="formProd" (ngSubmit)="addProduto()">
     <div class="row">
-      <input type="text" formControlName="entrega" value="{{entregaId}}">
       <mat-form-field class="col-md-6 mb-3">
         <mat-label>Observação</mat-label>
         <input matInput type="text" formControlName="observacao">
@@ -97,6 +95,7 @@
       <mat-form-field class="col-md-10 mb-3">
         <mat-label>Tipo alimentício</mat-label>
         <mat-select formControlName="tipo">
+          <ngx-mat-select-search formControlName="tipoAlimenticioFilter"></ngx-mat-select-search>
           @for (tipo of t ; track tipo.id){
             <mat-option [value]="tipo">
               {{ tipo.nome }}

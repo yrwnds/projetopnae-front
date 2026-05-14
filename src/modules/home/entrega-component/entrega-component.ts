@@ -4,7 +4,7 @@ import {AuthService} from '../../../core/services/auth-service';
 import {EntregaService} from '../../../core/services/entrega-service';
 import {ProdutoentregaService} from '../../../core/services/produtoentrega-service';
 import {Produtoentrega} from '../../../core/models/produtoentrega';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Tipoalimenticio} from '../../../core/models/tipoalimenticio';
 import {TipoalimenticioService} from '../../../core/services/tipoalimenticio-service';
 import {AgricultorService} from '../../../core/services/agricultor-service';
@@ -44,12 +44,12 @@ export class EntregaComponent {
         id: [null],
         dataentrega: [null, [Validators.required]],
         edital: [null, [Validators.required]],
-        usuario: [null, [Validators.required]]
+        usuario: [null]
       }
     )
     this.formProd = this.fb.group({
       id: [null],
-      entrega: [null, [Validators.required]],
+      entrega: [null],
       observacao: [null],
       qtd: [null, [Validators.required]],
       tipound: [null],
@@ -76,7 +76,16 @@ export class EntregaComponent {
 
   entregaId: number = 0;
 
+  usuLogado: number = 0;
+
   ngOnInit() {
+    this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
+      {
+        next: (usu) => {
+          this.usuLogado = usu.id;
+        }
+      }
+    )
     this.editalService.getAll().subscribe(
       {
         next: (ed) => {
@@ -159,10 +168,11 @@ export class EntregaComponent {
   addEntrega(){
     console.log('Validando form addentrega')
     console.log('dados:' + JSON.stringify(this.formEnt.value))
-    if(this.formEnt.valid){
-      const{id, edital, dataentrega, usuario} = this.formEnt.value;
 
-      this.entregaService.create({id, edital, dataentrega, usuario} as Entrega).subscribe(
+    if(this.formEnt.valid){
+      const{id, edital, dataentrega} = this.formEnt.value;
+
+      this.entregaService.create({id, edital, dataentrega} as Entrega).subscribe(
         {
           next: () => {
             console.log('Criou com sucesso.');
@@ -182,8 +192,8 @@ export class EntregaComponent {
     console.log('Validando form adicionarproduto...');
     console.log('dados: ' + JSON.stringify(this.formProd.value))
     if(this.formProd.valid){
-      const{id, entrega, observacao, qtd, tipound, agricultor, tipo}= this.formProd.value;
-      this.produtoService.create({id, entrega, observacao, qtd, tipound, agricultor, tipo} as Produtoentrega).subscribe(
+      const{id, observacao, qtd, tipound, agricultor, tipo}= this.formProd.value;
+      this.produtoService.create({id, observacao, qtd, tipound, agricultor, tipo} as Produtoentrega, this.entregaId).subscribe(
         {
           next: () => {
             console.log('Criou com sucesso.');
@@ -217,10 +227,9 @@ export class EntregaComponent {
     this.isAddingEnt = false;
   }
 
-  getUsuario(){
-    const Usulogado = this.authService.getUserEmail();
-    return this.usuarioService.buscarPorEmail(Usulogado);
-  }
+  // ngx-mat-select-search
+
+
 
   protected readonly JSON = JSON;
 }

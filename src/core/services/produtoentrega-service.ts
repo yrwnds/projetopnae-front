@@ -27,8 +27,8 @@ export class ProdutoentregaService {
     return this.httpClient.get<Produtoentrega[]>(env.apiUrl + '/produtoentrega/identrega/' + identrega);
   }
 
-  create(produtoentrega: Produtoentrega): Observable<Produtoentrega> {
-    return this.httpClient.post<Produtoentrega>(env.apiUrl + '/produtoentrega', produtoentrega);
+  create(produtoentrega: Produtoentrega, entregaId: number): Observable<Produtoentrega> {
+    return this.httpClient.post<Produtoentrega>(env.apiUrl + '/produtoentrega/' + entregaId, produtoentrega);
   }
 
   update(produtoentrega: Produtoentrega): Observable<Produtoentrega> {
