@@ -1,1 +1,67 @@
-<p>agricultor-component works!</p>
+<button type="button" (click)="openForm()">Adicionar agricultor</button>
+
+
+<div>
+  @if(a.length === 0 ){
+    <p>Nenhum resultado encontrado.</p>
+  } @else{
+    @for(a of a ; track a.id){
+
+      <div>
+        <div>
+          <p>{{  a.nome  }}, {{a.contato}}</p>
+          <button (click)="editandoAgricultor(a)">Editar</button>
+          <button (click)="excluirAgricultor(a)">Excluir</button>
+        </div>
+      </div>
+    }
+  }
+
+  @if(formOpen){
+    <form [formGroup]="form" (ngSubmit)="isEditando? atualizarAgricultor() : adicionarAgricultor()">
+      <div class="row">
+        <input type="text" formControlName="id">
+        <mat-form-field class="col-md-6 mb-3">
+          <mat-label>Nome</mat-label>
+          <input matInput type="text" formControlName="nome">
+          <mat-error>Nome do agricultor é obrigatório.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-md-6 mb-3">
+          <mat-label>Contato</mat-label>
+          <input matInput type="text" formControlName="contato">
+        </mat-form-field>
+        <hr class="mb-4">
+        <div class="row">
+          <button class="btn btn-primary" type="submit">
+            @if(isEditando){
+              Atualizar agricultor
+            } @else{
+              Adicionar agricultor
+            }
+          </button>
+          <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetForm()">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </form>
+  }
+
+  @if (errorMessage != ''){
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>{{ errorMessage }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+    </div>
+  }
+
+  @if (successMessage != ''){
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>{{ successMessage }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+    </div>
+  }
+
+
+
+
+</div>
