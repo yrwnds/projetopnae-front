@@ -18,6 +18,11 @@ import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 import {UsuarioService} from '../../../core/services/usuario-service';
 import {EditalService} from '../../../core/services/edital-service';
 import {Edital} from '../../../core/models/edital';
+import {DatePipe} from '@angular/common';
+import {registerLocaleData} from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import moment from 'moment';
+registerLocaleData(localePt, 'pt');
 
 @Component({
   selector: 'app-entrega-component',
@@ -32,7 +37,8 @@ import {Edital} from '../../../core/models/edital';
     MatSelect,
     MatError,
     NgxMatSelectSearchModule,
-    MatSelectModule
+    MatSelectModule,
+    DatePipe
   ],
   templateUrl: './entrega-component.html',
   styleUrl: './entrega-component.css',
@@ -236,8 +242,9 @@ export class EntregaComponent {
     console.log(JSON.stringify(entrega))
     this.formEnt.setValue({
       id: entrega.id,
-      dataentrega: entrega.dataentrega,
-      edital: entrega.edital
+      dataentrega: moment(entrega.dataentrega).format('YYYY-MM-DD'),
+      edital: entrega.edital,
+      usuario: entrega.usuario
     })
   }
 

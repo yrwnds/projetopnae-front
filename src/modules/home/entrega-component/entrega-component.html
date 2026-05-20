@@ -16,6 +16,7 @@
 @if(openFormEnt){
   <form [formGroup]="formEnt" (ngSubmit)="isEditandoEnt? atualizarEntrega() : addEntrega()">
     <div class="row">
+      <input type="hidden" formControlName="usuario">
       <input type="hidden" formControlName="id">
       <mat-form-field class="col-md-10 mb-3">
         <mat-label>Edital</mat-label>
@@ -64,7 +65,7 @@
     @if(e.usuario.id === usuLogado){
       <tr class="clickable" (click)="buscaProdutosPorId(e)">
         <td>{{ e.edital.nome }}</td>
-        <td>{{ e.dataentrega }}</td>
+        <td>{{ e.dataentrega | date:'fullDate' : '' : 'pt'}}</td>
         <td><button (click)="addingProdutos(e.id)">Add produto</button></td>
         <td><button (click)="editandoEntrega(e)">Editar entrega</button></td>
         <td><button (click)="excluirEntrega(e)">Excluir entrega</button></td>

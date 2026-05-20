@@ -9,7 +9,12 @@ import {CronogramaService} from '../../../core/services/cronograma-service';
 import {Tipoalimenticio} from '../../../core/models/tipoalimenticio';
 import {Cronograma} from '../../../core/models/cronograma';
 import {TipoalimenticioService} from '../../../core/services/tipoalimenticio-service';
+import {registerLocaleData} from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import {DatePipe} from '@angular/common';
+import moment from 'moment/moment';
 
+registerLocaleData(localePt, 'pt');
 @Component({
   selector: 'app-cronograma-component',
   imports: [
@@ -21,7 +26,8 @@ import {TipoalimenticioService} from '../../../core/services/tipoalimenticio-ser
     MatIcon,
     MatOption,
     MatSelect,
-    MatError
+    MatError,
+    DatePipe
   ],
   templateUrl: './cronograma-component.html',
   styleUrl: './cronograma-component.css',
@@ -102,7 +108,7 @@ export class CronogramaComponent {
         qtd: cronograma.qtd,
         tipound:  cronograma.tipound,
         observacao: cronograma.observacao,
-        previsaoentrega: cronograma.previsaoentrega,
+        previsaoentrega: moment(cronograma.previsaoentrega).format('YYYY-MM-DD'),
         tipo: cronograma.tipo
       })
     }

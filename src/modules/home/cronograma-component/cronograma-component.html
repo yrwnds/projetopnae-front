@@ -94,7 +94,7 @@
               {{c.tipo.nome }}
             </td>
             <td>
-             {{c.previsaoentrega}}
+             {{c.previsaoentrega | date: "MMMM 'de' yyyy" : '' : 'pt'}}
             </td>
             <td class="text-end">
               <button mat-button (click)="editandocronograma(c)">
