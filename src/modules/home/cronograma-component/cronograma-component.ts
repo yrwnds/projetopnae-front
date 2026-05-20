@@ -96,6 +96,7 @@ export class CronogramaComponent {
   protected editandocronograma(cronograma: Cronograma){
       this.isEditando = true;
       this.formOpen = true;
+      console.log(JSON.stringify(cronograma))
       this.form.setValue({
         id: cronograma.id,
         qtd: cronograma.qtd,

@@ -70,15 +70,19 @@ export class EntregaComponent {
   a: Agricultor[] = [];
   ed: Edital[] = [];
 
-  isAdding: boolean = false;
-  isEditandoProduto: boolean = false;
-  isAddingEnt: boolean = false;
+  openFormProd: boolean = false;
+  openFormEnt: boolean = false;
+
+  isEditandoEnt: boolean = false;
+  isEditandoProd: boolean = false;
 
   entregaId: number = 0;
 
   usuLogado: number = 0;
 
   ngOnInit() {
+    this.openFormProd = false;
+    this.openFormEnt = false;
     this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
       {
         next: (usu) => {
@@ -141,9 +145,44 @@ export class EntregaComponent {
       )
   }
 
-  atualizarProduto(produtoentrega: Produtoentrega){
-    this.isEditandoProduto = true;
+  protected excluirEntrega(entrega: Entrega){
+    if(confirm("Tem certeza que quer deletar " + entrega.dataentrega + "?")){
+      this.entregaService.delete(entrega.id as number).subscribe(
+        {
+          next: () => {
+            this.e = this.e.filter(e => e.id !== e.id)
+            this.ngOnInit()
+          },
+          error: (err) =>{
+            this.errorMessage = "Erro. " + JSON.stringify(err.error, ['message']);
+            console.error('Erro ao excluir: ', err);
+          }
+        }
+      )
+    }
+  }
 
+  protected excluirProduto(produto: Produtoentrega){
+    if(confirm("Tem certeza que quer deletar " + produto.tipo + "?")){
+      this.produtoService.delete(produto.id as number).subscribe(
+        {
+          next: () => {
+            this.p = this.p.filter(p => p.id !== produto.id)
+            this.ngOnInit()
+          },
+          error: (err) =>{
+            this.errorMessage = "Erro. " + JSON.stringify(err.error, ['message']);
+            console.error('Erro ao excluir: ', err);
+          }
+        }
+      )
+    }
+
+  }
+
+  editandoProduto(produtoentrega: Produtoentrega){
+    this.isEditandoProd = true;
+    this.openFormProd = true;
     this.formProd.setValue({
       id: produtoentrega.id,
       entrega: produtoentrega.entrega,
@@ -155,14 +194,75 @@ export class EntregaComponent {
     })
   }
 
+  atualizarProduto(){
+    if(this.formProd.valid){
+      console.log("Entrou em formvalid atualizarprod")
+      console.log('dados: ' + JSON.stringify(this.formProd.value))
+      const {id, qtd, tipound, observacao, tipo, entrega, agricultor} = this.formProd.value;
+      this.produtoService.update({id, qtd, tipound, observacao, tipo, entrega, agricultor}).subscribe(
+        {
+          next: (prodAtualizado) => {
+            console.log("entrou em subscribe next")
+            this.p = this.p.map(prod => prod.id === id ? prodAtualizado : entrega);
+            this.successMessage = "Sucesso."
+            this.ngOnInit();
+          },
+          error: (err) => {
+            this.errorMessage = "Erro. " + JSON.stringify(err.error, ['message']);
+            console.error('Erro ao atualizar prod: ', err);
+          }
+        }
+      )
+    } else{
+      this.errorMessage = "Erro. Cheque validade dos dados."
+    }
+  }
+
   addingProdutos(entregaId: number){
-    this.isAdding = true;
+    this.openFormProd = true;
+    this.formProd.reset()
     this.entregaId = entregaId;
+    this.isEditandoProd = false;
     console.log("EntregaProd = " + this.entregaId)
   }
 
-  addingEntregas(){
-    this.isAddingEnt = true;
+  entOpenForm(){
+    this.openFormEnt = true;
+  }
+
+  protected editandoEntrega(entrega: Entrega){
+    this.openFormEnt = true;
+    this.isEditandoEnt = true;
+    console.log(JSON.stringify(entrega))
+    this.formEnt.setValue({
+      id: entrega.id,
+      dataentrega: entrega.dataentrega,
+      edital: entrega.edital
+    })
+  }
+
+  protected atualizarEntrega(){
+    if(this.formEnt.valid){
+      console.log("Entrou em formvalid atualizarentrega")
+      console.log('dados: ' + JSON.stringify(this.formEnt.value))
+      const {id, dataentrega, edital, usuario} = this.formEnt.value;
+      this.entregaService.update({id, dataentrega, edital, usuario}).subscribe(
+        {
+          next: (entregaAtualizado) => {
+            console.log("entrou em subscribe next")
+            this.e = this.e.map(entrega => entrega.id === id ? entregaAtualizado : entrega);
+            this.successMessage = "Sucesso."
+            this.ngOnInit();
+          },
+          error: (err) => {
+            this.errorMessage = "Erro. " + JSON.stringify(err.error, ['message']);
+            console.error('Erro ao atualizar entrega: ', err);
+          }
+        }
+      )
+    } else{
+      this.errorMessage = "Erro. Cheque validade dos dados."
+    }
   }
 
   addEntrega(){
@@ -219,12 +319,12 @@ export class EntregaComponent {
 
   resetFormProd() {
     this.formProd.reset();
-    this.isAdding = false;
+    this.openFormProd = false;
   }
 
   resetFormEnt(){
     this.formEnt.reset();
-    this.isAddingEnt = false;
+    this.openFormEnt = false;
   }
 
   // ngx-mat-select-search

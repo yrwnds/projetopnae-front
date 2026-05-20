@@ -1,8 +1,22 @@
-<p>entrega-component works!</p>
-<button (click)="addingEntregas()">Add entrega</button>
-@if(isAddingEnt){
-  <form [formGroup]="formEnt" (ngSubmit)="addEntrega()">
+<button (click)="entOpenForm()">Add entrega</button>
+@if (errorMessage != ''){
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{{ errorMessage }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+  </div>
+}
+
+@if (successMessage != ''){
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{ successMessage }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+  </div>
+}
+
+@if(openFormEnt){
+  <form [formGroup]="formEnt" (ngSubmit)="isEditandoEnt? atualizarEntrega() : addEntrega()">
     <div class="row">
+      <input type="hidden" formControlName="id">
       <mat-form-field class="col-md-10 mb-3">
         <mat-label>Edital</mat-label>
         <mat-select formControlName="edital">
@@ -22,9 +36,13 @@
       <hr class="mb-4">
       <div class="row">
         <button class="btn btn-primary" type="submit">
-          Adicionar Entrega
+          @if(isEditandoEnt){
+            Editar entrega
+          }@else{
+            Adicionar Entrega
+          }
         </button>
-        <button class="btn btn-outline-dark mt-4" (click)="resetFormEnt()">
+        <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetFormEnt()">
           Cancelar
         </button>
       </div>
@@ -48,6 +66,8 @@
         <td>{{ e.edital.nome }}</td>
         <td>{{ e.dataentrega }}</td>
         <td><button (click)="addingProdutos(e.id)">Add produto</button></td>
+        <td><button (click)="editandoEntrega(e)">Editar entrega</button></td>
+        <td><button (click)="excluirEntrega(e)">Excluir entrega</button></td>
       </tr>
     }
   }
@@ -60,6 +80,7 @@
     <th>Qtd.</th>
     <th>Und.</th>
     <th>Agricultor</th>
+    <th>Ações</th>
   </tr>
   @if (p.length === 0) {
     <p>Clique em uma entrega para mostrar os produtos.</p>
@@ -70,13 +91,16 @@
       <td>{{p.qtd}}</td>
       <td>{{p.tipound}}</td>
       <td>{{p.agricultor.nome}}</td>
+      <td><button type="button" (click)="editandoProduto(p)">Editar</button>
+      <button type="button" (click)="excluirProduto(p)">Excluir</button></td>
     }
   }
 </table>
 
-@if(isAdding){
-  <form [formGroup]="formProd" (ngSubmit)="addProduto()">
+@if(openFormProd){
+  <form [formGroup]="formProd" (ngSubmit)="isEditandoProd? atualizarProduto() : addProduto()">
     <div class="row">
+      <input type="hidden" formControlName="id">
       <mat-form-field class="col-md-6 mb-3">
         <mat-label>Observação</mat-label>
         <input matInput type="text" formControlName="observacao">
@@ -95,7 +119,6 @@
       <mat-form-field class="col-md-10 mb-3">
         <mat-label>Tipo alimentício</mat-label>
         <mat-select formControlName="tipo">
-          <ngx-mat-select-search formControlName="tipoAlimenticioFilter"></ngx-mat-select-search>
           @for (tipo of t ; track tipo.id){
             <mat-option [value]="tipo">
               {{ tipo.nome }}
@@ -117,7 +140,11 @@
       <hr class="mb-4">
       <div class="row">
         <button class="btn btn-primary" type="submit">
-          Adicionar Produto
+          @if(isEditandoProd){
+            Atualizar Produto
+          } @else {
+            Adicionar Produto
+          }
         </button>
         <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetFormProd()">
           Cancelar
