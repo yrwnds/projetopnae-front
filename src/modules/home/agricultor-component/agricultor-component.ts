@@ -49,7 +49,7 @@ export class AgricultorComponent {
             this.a = a;
           },
           error: (err) => {
-            console.error('Erro ao buscar editais: ', err);
+            console.error('Erro ao buscar agricultores: ', err);
           }
         }
       )

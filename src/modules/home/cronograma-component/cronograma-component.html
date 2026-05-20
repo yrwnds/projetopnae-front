@@ -1,1 +1,109 @@
-<p>cronograma-component works!</p>
+<button type="button" (click)="openForm()">Adicionar cronograma</button>
+
+@if(formOpen){
+  <div class="container">
+    <div class="col-md-8 border border-muted p-5 mt-5 mx-auto">
+      <form [formGroup]="form" (ngSubmit)="isEditando? atualizarcronograma() : adicionarcronograma()">
+        <div class="row">
+          <input type="hidden" formControlName="id">
+          <mat-form-field>
+            <mat-label>Previsão de entrega</mat-label>
+            <input matInput type="date" formControlName="previsaoentrega">
+            <mat-error>Previsão de entrega é obrigatório.</mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-6 mb-3">
+            <mat-label>Observação</mat-label>
+            <input matInput type="text" formControlName="observacao">
+          </mat-form-field>
+          <mat-form-field class="col-md-2 mb-3">
+            <mat-label>Qtd.</mat-label>
+            <input matInput type="number" formControlName="qtd">
+            <mat-error>Quantidade é obrigatória.</mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-10 mb-3">
+            <mat-label>Tipo alimentício</mat-label>
+            <mat-select formControlName="tipo">
+              @for (t of t ; track t.id){
+                <mat-option [value]="t">
+                  {{ t.nome }}
+                </mat-option>
+              }
+            </mat-select>
+            <mat-error>Tipo alimentício é obrigatório.</mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-md-9">
+            <mat-label>Tipo unidade</mat-label>
+            <input matInput type="text" formControlName="tipound">
+            <mat-error>Tipo unidade é obrigatória.</mat-error>
+          </mat-form-field>
+          <hr class="mb-4">
+          <div class="row">
+            <button class="btn btn-primary" type="submit">
+              @if(isEditando){
+                Atualizar cronograma
+              } @else {
+                Adicionar cronograma
+              }
+            </button>
+            <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetForm()">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+  @if (errorMessage != ''){
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>{{ errorMessage }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+    </div>
+  }
+
+  @if (successMessage != ''){
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <strong>{{ successMessage }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+    </div>
+  }
+
+
+    <table class="table table-secondary mt-2">
+      <thead>
+      <th>Observação</th>
+      <th>Qtd</th>
+      <th>Und</th>
+      <th>Tipo Alimentício</th>
+      <th>Previsão de entrega</th>
+      </thead>
+      <tbody>
+        @for (c of c; track c.id) {
+          <tr>
+            <td>
+              {{ c.observacao }}
+            </td>
+            <td>
+              {{ c.qtd }}
+            </td>
+            <td>
+              {{ c.tipound }}
+            </td>
+            <td>
+              {{c.tipo.nome }}
+            </td>
+            <td>
+             {{c.previsaoentrega}}
+            </td>
+            <td class="text-end">
+              <button mat-button (click)="editandocronograma(c)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-button (click)="excluircronograma(c)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </tr> }
+      </tbody>
+    </table>
