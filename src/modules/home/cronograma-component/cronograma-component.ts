@@ -108,7 +108,7 @@ export class CronogramaComponent {
         qtd: cronograma.qtd,
         tipound:  cronograma.tipound,
         observacao: cronograma.observacao,
-        previsaoentrega: moment(cronograma.previsaoentrega).format('YYYY-MM-DD'),
+        previsaoentrega: moment.utc(cronograma.previsaoentrega).format('YYYY-MM-DD'),
         tipo: cronograma.tipo
       })
     }

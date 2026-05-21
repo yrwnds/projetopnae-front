@@ -242,7 +242,7 @@ export class EntregaComponent {
     console.log(JSON.stringify(entrega))
     this.formEnt.setValue({
       id: entrega.id,
-      dataentrega: moment(entrega.dataentrega).format('YYYY-MM-DD'),
+      dataentrega: moment.utc(entrega.dataentrega).format('YYYY-MM-DD'),
       edital: entrega.edital,
       usuario: entrega.usuario
     })
