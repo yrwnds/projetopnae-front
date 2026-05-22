@@ -18,10 +18,11 @@ import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 import {UsuarioService} from '../../../core/services/usuario-service';
 import {EditalService} from '../../../core/services/edital-service';
 import {Edital} from '../../../core/models/edital';
-import {DatePipe} from '@angular/common';
+import {AsyncPipe, DatePipe} from '@angular/common';
 import {registerLocaleData} from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import moment from 'moment';
+import {ReplaySubject, Subject, takeUntil} from 'rxjs';
 registerLocaleData(localePt, 'pt');
 
 @Component({
@@ -38,7 +39,8 @@ registerLocaleData(localePt, 'pt');
     MatError,
     NgxMatSelectSearchModule,
     MatSelectModule,
-    DatePipe
+    DatePipe,
+    AsyncPipe
   ],
   templateUrl: './entrega-component.html',
   styleUrl: './entrega-component.css',
@@ -86,9 +88,17 @@ export class EntregaComponent {
 
   usuLogado: number = 0;
 
+  tipoFiltroCtrl: FormControl<string | null> = new FormControl<string | null>('');
+  protected _onDestroy = new Subject<void>();
+  tipoFiltrado: ReplaySubject<Tipoalimenticio[]> = new ReplaySubject<Tipoalimenticio[]>(1);
+
+
   ngOnInit() {
     this.openFormProd = false;
     this.openFormEnt = false;
+    this.formProd.reset();
+    this.formEnt.reset();
+    this.p = [];
     this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
       {
         next: (usu) => {
@@ -136,7 +146,30 @@ export class EntregaComponent {
         }
       }
     )
+    this.tipoFiltroCtrl.valueChanges.pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterTipo();
+      })
   }
+
+  protected filterTipo(){
+    let search = this.tipoFiltroCtrl.value;
+    if(!search){
+      this.tipoFiltrado.next(this.t.slice())
+    } else{
+      search = search!.toLowerCase()
+    }
+    if (typeof search === "string") {
+      this.tipoFiltrado.next(
+        this.t.filter(tipo => tipo.nome.toLowerCase().indexOf(search) > -1)
+      )
+    }
+  }
+
+  compararObjetos(o1: any, o2: any): boolean {
+    return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
+
 
   buscaProdutosPorId(entrega: Entrega){
       this.produtoService.buscarPorIdEntrega(entrega.id).subscribe(
@@ -209,7 +242,7 @@ export class EntregaComponent {
         {
           next: (prodAtualizado) => {
             console.log("entrou em subscribe next")
-            this.p = this.p.map(prod => prod.id === id ? prodAtualizado : entrega);
+            this.p = this.p.map(prod => prod.id === id ? prodAtualizado : prod);
             this.successMessage = "Sucesso."
             this.ngOnInit();
           },
@@ -260,6 +293,7 @@ export class EntregaComponent {
             this.e = this.e.map(entrega => entrega.id === id ? entregaAtualizado : entrega);
             this.successMessage = "Sucesso."
             this.ngOnInit();
+            this.formEnt.reset();
           },
           error: (err) => {
             this.errorMessage = "Erro. " + JSON.stringify(err.error, ['message']);

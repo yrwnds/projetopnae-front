@@ -20,7 +20,7 @@
       <input type="hidden" formControlName="id">
       <mat-form-field class="col-md-10 mb-3">
         <mat-label>Edital</mat-label>
-        <mat-select formControlName="edital">
+        <mat-select formControlName="edital" [compareWith]="compararObjetos">
           @for (ed of ed ; track ed.id){
             <mat-option [value]="ed">
               {{ ed.nome }}
@@ -65,7 +65,7 @@
     @if(e.usuario.id === usuLogado){
       <tr class="clickable" (click)="buscaProdutosPorId(e)">
         <td>{{ e.edital.nome }}</td>
-        <td>{{ e.dataentrega | date:'fullDate' : '' : 'pt'}}</td>
+        <td>{{ e.dataentrega | date:'fullDate' : 'UTC' : 'pt'}}</td>
         <td><button (click)="addingProdutos(e.id)">Add produto</button></td>
         <td><button (click)="editandoEntrega(e)">Editar entrega</button></td>
         <td><button (click)="excluirEntrega(e)">Excluir entrega</button></td>
@@ -83,10 +83,12 @@
     <th>Agricultor</th>
     <th>Ações</th>
   </tr>
+
   @if (p.length === 0) {
     <p>Clique em uma entrega para mostrar os produtos.</p>
   } @else {
     @for (p of p; track p.id) {
+      <tr>
       <td>{{p.tipo.nome}}</td>
       <td>{{p.observacao}}</td>
       <td>{{p.qtd}}</td>
@@ -94,8 +96,10 @@
       <td>{{p.agricultor.nome}}</td>
       <td><button type="button" (click)="editandoProduto(p)">Editar</button>
       <button type="button" (click)="excluirProduto(p)">Excluir</button></td>
+      </tr>
     }
   }
+
 </table>
 
 @if(openFormProd){
@@ -108,19 +112,22 @@
       </mat-form-field>
       <mat-form-field class="col-md-10 mb-3">
         <mat-label>Agricultor</mat-label>
-        <mat-select formControlName="agricultor">
+        <mat-select formControlName="agricultor" [compareWith]="compararObjetos">
           @for (agr of a ; track agr.id){
             <mat-option [value]="agr">
               {{ agr.nome }}
             </mat-option>
           }
         </mat-select>
-        <mat-error>Tipo alimentício é obrigatório.</mat-error>
+        <mat-error>Agricultor é obrigatório.</mat-error>
       </mat-form-field>
       <mat-form-field class="col-md-10 mb-3">
         <mat-label>Tipo alimentício</mat-label>
-        <mat-select formControlName="tipo">
-          @for (tipo of t ; track tipo.id){
+        <mat-select formControlName="tipo" [compareWith]="compararObjetos">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="tipoFiltroCtrl"></ngx-mat-select-search>
+          </mat-option>
+          @for (tipo of tipoFiltrado | async ; track tipo){
             <mat-option [value]="tipo">
               {{ tipo.nome }}
             </mat-option>

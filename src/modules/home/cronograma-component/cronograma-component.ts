@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatInput} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -9,10 +9,12 @@ import {CronogramaService} from '../../../core/services/cronograma-service';
 import {Tipoalimenticio} from '../../../core/models/tipoalimenticio';
 import {Cronograma} from '../../../core/models/cronograma';
 import {TipoalimenticioService} from '../../../core/services/tipoalimenticio-service';
-import {registerLocaleData} from '@angular/common';
+import {AsyncPipe, registerLocaleData} from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import {DatePipe} from '@angular/common';
 import moment from 'moment/moment';
+import {ReplaySubject, Subject, takeUntil} from 'rxjs';
+import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
 
 registerLocaleData(localePt, 'pt');
 @Component({
@@ -27,7 +29,9 @@ registerLocaleData(localePt, 'pt');
     MatOption,
     MatSelect,
     MatError,
-    DatePipe
+    DatePipe,
+    AsyncPipe,
+    NgxMatSelectSearchModule
   ],
   templateUrl: './cronograma-component.html',
   styleUrl: './cronograma-component.css',
@@ -53,6 +57,10 @@ export class CronogramaComponent {
     })
   }
 
+  tipoFiltroCtrl: FormControl<string | null> = new FormControl<string | null>('');
+  protected _onDestroy = new Subject<void>();
+  tipoFiltrado: ReplaySubject<Tipoalimenticio[]> = new ReplaySubject<Tipoalimenticio[]>(1);
+
     ngOnInit() {
       this.isEditando = false
       this.formOpen = false
@@ -76,7 +84,26 @@ export class CronogramaComponent {
           }
         }
       )
+      this.tipoFiltroCtrl.valueChanges.pipe(takeUntil(this._onDestroy))
+        .subscribe(() => {
+          this.filterTipo();
+        })
     }
+
+
+  protected filterTipo(){
+    let search = this.tipoFiltroCtrl.value;
+    if(!search){
+      this.tipoFiltrado.next(this.t.slice())
+    } else{
+      search = search!.toLowerCase()
+    }
+    if (typeof search === "string") {
+      this.tipoFiltrado.next(
+        this.t.filter(tipo => tipo.nome.toLowerCase().indexOf(search) > -1)
+      )
+    }
+  }
 
   protected excluircronograma(cronograma: Cronograma){
       if(confirm("Tem certeza que quer deletar " + cronograma.tipo.nome + "?")){
@@ -94,6 +121,10 @@ export class CronogramaComponent {
       }
 
     }
+
+  compararObjetos(o1: any, o2: any): boolean {
+    return o1 && o2 ? o1.id === o2.id : o1 === o2;
+  }
 
   protected openForm(){
       this.formOpen = true;

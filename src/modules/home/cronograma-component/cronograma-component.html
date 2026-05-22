@@ -22,10 +22,13 @@
           </mat-form-field>
           <mat-form-field class="col-md-10 mb-3">
             <mat-label>Tipo alimentício</mat-label>
-            <mat-select formControlName="tipo">
-              @for (t of t ; track t.id){
-                <mat-option [value]="t">
-                  {{ t.nome }}
+            <mat-select formControlName="tipo" [compareWith]="compararObjetos">
+              <mat-option>
+                <ngx-mat-select-search [formControl]="tipoFiltroCtrl"></ngx-mat-select-search>
+              </mat-option>
+              @for (tipo of tipoFiltrado | async ; track tipo){
+                <mat-option [value]="tipo">
+                  {{ tipo.nome }}
                 </mat-option>
               }
             </mat-select>
@@ -94,7 +97,7 @@
               {{c.tipo.nome }}
             </td>
             <td>
-             {{c.previsaoentrega | date: "MMMM 'de' yyyy" : '' : 'pt'}}
+             {{c.previsaoentrega | date: "MMMM 'de' yyyy" : 'UTC' : 'pt'}}
             </td>
             <td class="text-end">
               <button mat-button (click)="editandocronograma(c)">
