@@ -6,14 +6,15 @@
     <p>Nenhum resultado encontrado.</p>
   } @else{
     @for(a of a ; track a.id){
-
-      <div>
+      @if(a.usuario?.id === usuLogado){
         <div>
-          <p>{{  a.nome  }}, {{a.contato}}</p>
-          <button (click)="editandoAgricultor(a)">Editar</button>
-          <button (click)="excluirAgricultor(a)">Excluir</button>
+          <div>
+            <p>{{  a.nome  }}, {{a.contato}}</p>
+            <button (click)="editandoAgricultor(a)">Editar</button>
+            <button (click)="excluirAgricultor(a)">Excluir</button>
+          </div>
         </div>
-      </div>
+      }
     }
   }
 

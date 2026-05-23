@@ -1,4 +1,3 @@
-<p>home-component works!</p>
 <div>
   <a routerLink="edital">Testar edital</a>
 </div>
@@ -19,6 +18,8 @@
   Sair
 </button>
 
+<p>Bem-vindo, {{usuNome}}</p>
+<p>Hoje é {{moment.now() | date:'fullDate' : 'UTC' : 'pt'}}</p>
 
 <div class="content">
   <router-outlet></router-outlet>

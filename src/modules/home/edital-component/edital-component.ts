@@ -33,18 +33,26 @@ export class EditalComponent {
   form: FormGroup;
   isEditando = false;
   formOpen = false;
+  usuLogado: number = 0;
 
   constructor(private fb: FormBuilder, private editalService: EditalService, private usuarioService: UsuarioService, private authService: AuthService) {
     this.form = this.fb.group({
       id: [null],
       nome: [null, [Validators.required]],
-      observacao: [null]
+      observacao: [null],
     })
   }
 
   ngOnInit() {
     this.isEditando = false
     this.formOpen = false
+    this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
+      {
+        next: (usu) => {
+          this.usuLogado = usu.id;
+        }
+      }
+    )
     this.editalService.getAll().subscribe(
       {
         next: (e) => {
@@ -92,8 +100,8 @@ export class EditalComponent {
     if(this.form.valid){
       console.log("Entrou em formvalid atualizaredital")
       console.log('dados: ' + JSON.stringify(this.form.value))
-      const {id, nome, observacao} = this.form.value;
-      this.editalService.update({id, nome, observacao}).subscribe(
+      const {id, nome, observacao, usuario} = this.form.value;
+      this.editalService.update({id, nome, observacao, usuario}).subscribe(
         {
           next: (editalAtualizado) => {
             console.log("entrou em subscribe next")

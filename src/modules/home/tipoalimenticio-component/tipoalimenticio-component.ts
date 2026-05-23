@@ -7,6 +7,8 @@ import {MatIcon} from '@angular/material/icon';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {Tipoalimenticio} from '../../../core/models/tipoalimenticio';
 import {TipoalimenticioService} from '../../../core/services/tipoalimenticio-service';
+import {UsuarioService} from '../../../core/services/usuario-service';
+import {AuthService} from '../../../core/services/auth-service';
 
 @Component({
   selector: 'app-tipoalimenticio-component',
@@ -31,18 +33,26 @@ export class TipoalimenticioComponent {
   form: FormGroup;
   isEditando = false;
   formOpen = false;
+  usuLogado: number = 0;
 
-  constructor(private fb: FormBuilder, private tipoalimenticioService: TipoalimenticioService){
+  constructor(private fb: FormBuilder, private tipoalimenticioService: TipoalimenticioService, private usuarioService: UsuarioService, private authService: AuthService){
     this.form = this.fb.group({
       id: [null],
-      nome: [null, [Validators.required]]
+      nome: [null, [Validators.required]],
     })
   }
 
-
   ngOnInit() {
     this.isEditando = false
+    this.form.reset()
     this.formOpen = false
+    this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
+      {
+        next: (usu) => {
+          this.usuLogado = usu.id;
+        }
+      }
+    )
     this.tipoalimenticioService.getAll().subscribe(
       {
         next: (t) => {
@@ -55,12 +65,38 @@ export class TipoalimenticioComponent {
     )
   }
 
+  filterResults(text: string) {
+    if(!text || text == ''){
+      this.tipoalimenticioService.getAll().subscribe(
+        {
+          next: (t) => {
+            this.t = t;
+          },
+          error: (err) => {
+            console.error('Erro ao buscar tipos alimentícios: ', err)
+          }
+        }
+      )
+    }
+    this.tipoalimenticioService.buscarPorNome(text).subscribe(
+      {
+        next: (t) => {
+          this.t = t;
+        },
+        error: (err) => {
+          console.error('Erro ao buscar tipos alimentícios: ', err)
+        }
+      }
+    )
+  }
+
   protected excluirTipoalimenticio(tipoalimenticio: Tipoalimenticio){
     if(confirm("Tem certeza que quer deletar " + tipoalimenticio.nome + "?")){
       this.tipoalimenticioService.delete(tipoalimenticio.id as number).subscribe(
         {
           next: () => {
             this.t = this.t.filter(t => t.id !== tipoalimenticio.id)
+            this.ngOnInit()
           },
           error: (err) =>{
             this.errorMessage = "Erro. " + JSON.stringify(err.error, ['message']);
@@ -89,8 +125,8 @@ export class TipoalimenticioComponent {
     if(this.form.valid){
       console.log("Entrou em formvalid atualizartipoalimenticio")
       console.log('dados: ' + JSON.stringify(this.form.value))
-      const {id, nome} = this.form.value;
-      this.tipoalimenticioService.update({id, nome}).subscribe(
+      const {id, nome, usuario} = this.form.value;
+      this.tipoalimenticioService.update({id, nome, usuario}).subscribe(
         {
           next: (tipoalimenticioAtualizado) => {
             console.log("entrou em subscribe next")
@@ -113,8 +149,8 @@ export class TipoalimenticioComponent {
     console.log('validando form adicionartipoalimenticio');
     console.log('dados: ' + JSON.stringify(this.form.value))
     if (this.form.valid){
-      const{id, nome, observacao} = this.form.value;
-      this.tipoalimenticioService.create({id, nome, observacao} as Tipoalimenticio).subscribe(
+      const{id, nome, usuario} = this.form.value;
+      this.tipoalimenticioService.create({id, nome, usuario} as Tipoalimenticio).subscribe(
         {
           next: () => {
             console.log('Criou com sucesso');

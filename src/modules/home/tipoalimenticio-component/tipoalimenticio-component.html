@@ -1,61 +1,69 @@
+
+<input type="text" placeholder="Procure um tipo alimentício" #filter />
+<button class="primary" type="button" (click)="filterResults(filter.value)">Buscar</button>
+
 <button type="button" (click)="openForm()">Adicionar tipo alimentício</button>
 
+@if(formOpen){
+  <form [formGroup]="form" (ngSubmit)="isEditando? atualizarTipoalimenticio() : adicionarTipoalimenticio()">
+    <div class="row">
+      <input type="hidden" formControlName="id">
+      <mat-form-field class="col-md-6 mb-3">
+        <mat-label>Nome</mat-label>
+        <input matInput type="text" formControlName="nome">
+        <mat-error>Nome do tipo alimentício é obrigatório.</mat-error>
+      </mat-form-field>
+      <hr class="mb-4">
+      <div class="row">
+        <button class="btn btn-primary" type="submit">
+          @if(isEditando){
+            Atualizar tipo alimentício
+          } @else{
+            Adicionar tipo alimentício
+          }
+        </button>
+        <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetForm()">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </form>
+}
+
+@if (errorMessage != ''){
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{{ errorMessage }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+  </div>
+}
+
+@if (successMessage != ''){
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{ successMessage }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+  </div>
+}
 
 <div>
   @if(t.length === 0 ){
     <p>Nenhum resultado encontrado.</p>
   } @else{
     @for(t of t ; track t.id){
-
-      <div>
+      @if(t.usuario?.id == null || t.usuario?.id === usuLogado){
         <div>
-          <p>{{  t.nome  }}</p>
+          <div>
+            <p>{{  t.nome  }}</p>
+          </div>
+        </div>
+        @if(t.usuario?.id === usuLogado){
           <button (click)="editandoTipoalimenticio(t)">Editar</button>
           <button (click)="excluirTipoalimenticio(t)">Excluir</button>
-        </div>
-      </div>
+        }
+      }
     }
   }
 
-  @if(formOpen){
-    <form [formGroup]="form" (ngSubmit)="isEditando? atualizarTipoalimenticio() : adicionarTipoalimenticio()">
-      <div class="row">
-        <input type="hidden" formControlName="id">
-        <mat-form-field class="col-md-6 mb-3">
-          <mat-label>Nome</mat-label>
-          <input matInput type="text" formControlName="nome">
-          <mat-error>Nome do tipo alimentício é obrigatório.</mat-error>
-        </mat-form-field>
-        <hr class="mb-4">
-        <div class="row">
-          <button class="btn btn-primary" type="submit">
-            @if(isEditando){
-              Atualizar tipo alimentício
-            } @else{
-              Adicionar tipo alimentício
-            }
-          </button>
-          <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetForm()">
-            Cancelar
-          </button>
-        </div>
-      </div>
-    </form>
-  }
 
-  @if (errorMessage != ''){
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <strong>{{ errorMessage }}</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
-    </div>
-  }
-
-  @if (successMessage != ''){
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <strong>{{ successMessage }}</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
-    </div>
-  }
 
 
 

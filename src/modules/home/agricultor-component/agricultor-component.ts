@@ -7,6 +7,8 @@ import {MatIcon} from '@angular/material/icon';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {AgricultorService} from '../../../core/services/agricultor-service';
 import {Agricultor} from '../../../core/models/agricultor';
+import {UsuarioService} from '../../../core/services/usuario-service';
+import {AuthService} from '../../../core/services/auth-service';
 
 @Component({
   selector: 'app-agricultor-component',
@@ -31,18 +33,28 @@ export class AgricultorComponent {
   form: FormGroup;
   isEditando = false;
   formOpen = false;
+  usuLogado: number = 0;
 
-  constructor(private fb: FormBuilder, private agricultorService: AgricultorService){
+
+  constructor(private fb: FormBuilder, private agricultorService: AgricultorService,  private usuarioService: UsuarioService, private authService: AuthService){
     this.form = this.fb.group({
       id: [null],
       nome: [null, [Validators.required]],
-      contato: [null]
+      contato: [null],
+      usuario: [null]
     })
   }
 
     ngOnInit() {
       this.isEditando = false
       this.formOpen = false
+      this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
+        {
+          next: (usu) => {
+            this.usuLogado = usu.id;
+          }
+        }
+      )
       this.agricultorService.getAll().subscribe(
         {
           next: (a) => {
@@ -82,7 +94,7 @@ export class AgricultorComponent {
       this.form.setValue({
         id: agricultor.id,
         nome: agricultor.nome,
-        contato: agricultor.contato
+        contato: agricultor.contato,
       })
     }
 
@@ -90,8 +102,8 @@ export class AgricultorComponent {
       if(this.form.valid){
         console.log("Entrou em formvalid atualizaragricultor")
         console.log('dados: ' + JSON.stringify(this.form.value))
-        const {id, nome, contato} = this.form.value;
-        this.agricultorService.update({id, nome, contato}).subscribe(
+        const {id, nome, contato, usuario} = this.form.value;
+        this.agricultorService.update({id, nome, contato, usuario}).subscribe(
           {
             next: (agricultorAtualizado) => {
               console.log("entrou em subscribe next")

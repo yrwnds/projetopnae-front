@@ -1,4 +1,5 @@
 import {Tipoalimenticio} from './tipoalimenticio';
+import {Usuario} from './usuario';
 
 export interface Cronograma{
   id: number;
@@ -7,4 +8,5 @@ export interface Cronograma{
   tipound: string;
   previsaoentrega: Date;
   tipo: Tipoalimenticio;
+  usuario: Usuario;
 }

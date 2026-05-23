@@ -15,8 +15,8 @@ export class TipoalimenticioService {
     return this.httpClient.get<Tipoalimenticio[]>(env.apiUrl + '/tipoalimenticio/listar');
   }
 
-  buscarPorNome(nome: string): Observable<Tipoalimenticio>{
-    return this.httpClient.get<Tipoalimenticio>(env.apiUrl + '/tipoalimenticio/nome/' + nome);
+  buscarPorNome(nome: string): Observable<Tipoalimenticio[]>{
+    return this.httpClient.get<Tipoalimenticio[]>(env.apiUrl + '/tipoalimenticio/nome/' + nome);
   }
 
   buscarPorId(id: string): Observable<Tipoalimenticio>{

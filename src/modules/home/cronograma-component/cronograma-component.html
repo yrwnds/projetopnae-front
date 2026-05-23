@@ -83,30 +83,33 @@
       </thead>
       <tbody>
         @for (c of c; track c.id) {
-          <tr>
-            <td>
-              {{ c.observacao }}
-            </td>
-            <td>
-              {{ c.qtd }}
-            </td>
-            <td>
-              {{ c.tipound }}
-            </td>
-            <td>
-              {{c.tipo.nome }}
-            </td>
-            <td>
-             {{c.previsaoentrega | date: "MMMM 'de' yyyy" : 'UTC' : 'pt'}}
-            </td>
-            <td class="text-end">
-              <button mat-button (click)="editandocronograma(c)">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-button (click)="excluircronograma(c)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </tr> }
+          @if(c.usuario?.id === usuLogado){
+            <tr>
+              <td>
+                {{ c.observacao }}
+              </td>
+              <td>
+                {{ c.qtd }}
+              </td>
+              <td>
+                {{ c.tipound }}
+              </td>
+              <td>
+                {{c.tipo.nome }}
+              </td>
+              <td>
+                {{c.previsaoentrega | date: "MMMM 'de' yyyy" : 'UTC' : 'pt'}}
+              </td>
+              <td class="text-end">
+                <button mat-button (click)="editandocronograma(c)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-button (click)="excluircronograma(c)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          }
+           }
       </tbody>
     </table>

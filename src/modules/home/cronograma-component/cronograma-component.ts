@@ -15,6 +15,8 @@ import {DatePipe} from '@angular/common';
 import moment from 'moment/moment';
 import {ReplaySubject, Subject, takeUntil} from 'rxjs';
 import {NgxMatSelectSearchModule} from 'ngx-mat-select-search';
+import {UsuarioService} from '../../../core/services/usuario-service';
+import {AuthService} from '../../../core/services/auth-service';
 
 registerLocaleData(localePt, 'pt');
 @Component({
@@ -45,15 +47,17 @@ export class CronogramaComponent {
   form: FormGroup;
   isEditando = false;
   formOpen = false;
+  usuLogado: number = 0;
 
-  constructor(private fb: FormBuilder, private cronogramaService: CronogramaService, private tipoalimenticioService: TipoalimenticioService) {
+
+  constructor(private fb: FormBuilder, private cronogramaService: CronogramaService, private tipoalimenticioService: TipoalimenticioService,  private usuarioService: UsuarioService, private authService: AuthService) {
     this.form = this.fb.group({
       id: [null],
       observacao: [null],
       qtd: [null, [Validators.required]],
       tipound: [null],
       previsaoentrega: [null, [Validators.required]],
-      tipo: [null, [Validators.required]]
+      tipo: [null, [Validators.required]],
     })
   }
 
@@ -64,6 +68,13 @@ export class CronogramaComponent {
     ngOnInit() {
       this.isEditando = false
       this.formOpen = false
+      this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
+        {
+          next: (usu) => {
+            this.usuLogado = usu.id;
+          }
+        }
+      )
       this.cronogramaService.getAll().subscribe(
         {
           next: (c) => {
@@ -148,8 +159,8 @@ export class CronogramaComponent {
       if(this.form.valid){
         console.log("Entrou em formvalid atualizarcronograma")
         console.log('dados: ' + JSON.stringify(this.form.value))
-        const {id, qtd, tipound, observacao, previsaoentrega, tipo} = this.form.value;
-        this.cronogramaService.update({id, qtd, tipound, observacao, previsaoentrega, tipo}).subscribe(
+        const {id, qtd, tipound, observacao, previsaoentrega, tipo, usuario} = this.form.value;
+        this.cronogramaService.update({id, qtd, tipound, observacao, previsaoentrega, tipo, usuario}).subscribe(
           {
             next: (cronogramaAtualizado) => {
               console.log("entrou em subscribe next")
