@@ -32,6 +32,7 @@ export class HomeComponent {
   }
 
   usuNome = '';
+  horario = moment.now()
 
   ngOnInit(){
     this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(

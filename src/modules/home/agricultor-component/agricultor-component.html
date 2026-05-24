@@ -21,7 +21,7 @@
   @if(formOpen){
     <form [formGroup]="form" (ngSubmit)="isEditando? atualizarAgricultor() : adicionarAgricultor()">
       <div class="row">
-        <input type="text" formControlName="id">
+        <input type="hidden" formControlName="id">
         <mat-form-field class="col-md-6 mb-3">
           <mat-label>Nome</mat-label>
           <input matInput type="text" formControlName="nome">

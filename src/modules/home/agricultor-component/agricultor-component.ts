@@ -40,9 +40,7 @@ export class AgricultorComponent {
     this.form = this.fb.group({
       id: [null],
       nome: [null, [Validators.required]],
-      contato: [null],
-      usuario: [null]
-    })
+      contato: [null, [Validators.required]]})
   }
 
     ngOnInit() {
