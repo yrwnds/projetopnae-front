@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FullCalendarModule } from '@fullcalendar/angular';
+import {Component} from '@angular/core';
+import {FullCalendarModule} from '@fullcalendar/angular';
 import {CalendarOptions, EventClickArg, EventSourceInput} from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, {DateClickArg} from '@fullcalendar/interaction';
@@ -11,19 +11,22 @@ import {AuthService} from '../../../core/services/auth-service';
 import {Produtoentrega} from '../../../core/models/produtoentrega';
 import {ProdutoentregaService} from '../../../core/services/produtoentrega-service';
 
+import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+
 @Component({
   selector: 'app-dashboard-component',
-  imports: [FullCalendarModule],
+  imports: [FullCalendarModule, CanvasJSAngularChartsModule],
   templateUrl: './dashboard-component.html',
   styleUrl: './dashboard-component.css',
 })
 export class DashboardComponent {
 
-  constructor(private entregaService: EntregaService, private usuarioService: UsuarioService, private authService: AuthService, private produtoEntregaService : ProdutoentregaService) {
+  constructor(private entregaService: EntregaService, private usuarioService: UsuarioService, private authService: AuthService, private produtoEntregaService: ProdutoentregaService) {
   }
 
   usuLogado = 0
   e: Entrega[] = [];
+  p: Produtoentrega[] = []
 
   entrega: Entrega = {} as Entrega
   produtos: Produtoentrega[] = []
@@ -47,7 +50,7 @@ export class DashboardComponent {
           console.log(this.e)
           this.calendarOptions = {
             events: this.e.map((e) => {
-              if (e.id === this.usuLogado) {
+              if (e.usuario.id === this.usuLogado) {
                 return ({
                   id: e.id.toString(),
                   title: e.edital.nome,
@@ -73,12 +76,12 @@ export class DashboardComponent {
     events: []
   };
 
-  handleEventClick(arg: EventClickArg){
+  handleEventClick(arg: EventClickArg) {
     this.entregaService.buscarPorId(arg.event.id).subscribe(
       {
         next: (e) => {
           this.entrega = e;
-    },
+        },
         error: (err) => {
           console.log("Erro ao buscar entrega no calendário: ", err)
           this.errorMessage = "Erro. " + JSON.stringify(err.error, ['message']);
@@ -99,12 +102,12 @@ export class DashboardComponent {
     this.openDetalhes = true
   }
 
-  clear(){
+  clear() {
     this.errorMessage = ''
     this.successMessage = ''
   }
 
-  fechar(){
+  fechar() {
     this.entrega = {} as Entrega
     this.produtos = []
     this.openDetalhes = false
