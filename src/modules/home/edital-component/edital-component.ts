@@ -46,6 +46,7 @@ export class EditalComponent {
   ngOnInit() {
     this.isEditando = false
     this.formOpen = false
+    this.form.reset()
     this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
       {
         next: (usu) => {

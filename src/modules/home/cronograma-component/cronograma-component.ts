@@ -68,6 +68,7 @@ export class CronogramaComponent {
     ngOnInit() {
       this.isEditando = false
       this.formOpen = false
+      this.form.reset()
       this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
         {
           next: (usu) => {
