@@ -1,2 +1,34 @@
 <p>dashboard-component works!</p>
-<full-calendar [options]="calendarOptions"></full-calendar>
+@if (errorMessage != ''){
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{{ errorMessage }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+  </div>
+}
+
+@if (successMessage != ''){
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{ successMessage }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+  </div>
+}
+
+@if(openDetalhes){
+  <h1>Clicou em Entrega {{entrega.id}}</h1>
+  <button type="button" (click)="fechar()">Fechar</button>
+  <p>{{entrega.dataentrega}}</p>
+  @for(p of produtos ; track p.id){
+    <h4>{{p.tipo.nome}}</h4>
+  }
+}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    </div>
+    <div class="col">
+
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
