@@ -1,60 +1,90 @@
-<button type="button" (click)="openForm()">Adicionar cronograma</button>
+<header>
+  <div>
+    <h2>Cronograma</h2>
+  </div>
+</header>
+
+
+<section class="filters-action">
+  <div class="filters">
+    <div class="search-filter"><i class="fa-solid fa-magnifying-glass" (click)="filterResults(filter.value)"></i><input
+      type="text" #filter placeholder="Pesquise..." (keydown.enter)="filterResults(filter.value)"></div>
+  </div>
+  <div class="action-btns">
+    <button class="btn-basic" (click)="openForm()">Adicionar <i class="fa-solid fa-plus"></i></button>
+    <button class="btn-basic btn-var-border">Exportar <i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+  </div>
+</section>
 
 @if(formOpen){
-  <div class="container">
-    <div class="col-md-8 border border-muted p-5 mt-5 mx-auto">
+  <div class="modal-overlay">
+    <section class="modal-content card">
+      @if(isEditando){
+        <h2>Editar Cronograma</h2>
+      }@else{
+        <h2>Novo Cronograma</h2>
+      }
+
       <form [formGroup]="form" (ngSubmit)="isEditando? atualizarcronograma() : adicionarcronograma()">
         <div class="row">
           <input type="hidden" formControlName="id">
-          <mat-form-field>
-            <mat-label>Previsão de entrega</mat-label>
-            <input matInput type="date" formControlName="previsaoentrega">
-            <mat-error>Previsão de entrega é obrigatório.</mat-error>
-          </mat-form-field>
-          <mat-form-field class="col-md-6 mb-3">
-            <mat-label>Observação</mat-label>
-            <input matInput type="text" formControlName="observacao">
-          </mat-form-field>
-          <mat-form-field class="col-md-2 mb-3">
-            <mat-label>Qtd.</mat-label>
-            <input matInput type="number" formControlName="qtd">
-            <mat-error>Quantidade é obrigatória.</mat-error>
-          </mat-form-field>
-          <mat-form-field class="col-md-10 mb-3">
-            <mat-label>Tipo alimentício</mat-label>
-            <mat-select formControlName="tipo" [compareWith]="compararObjetos">
-              <mat-option>
-                <ngx-mat-select-search [formControl]="tipoFiltroCtrl"></ngx-mat-select-search>
-              </mat-option>
-              @for (tipo of tipoFiltrado | async ; track tipo){
-                <mat-option [value]="tipo">
-                  {{ tipo.nome }}
+          <div class="filter-row">
+            <mat-form-field>
+              <mat-label>Previsão de entrega</mat-label>
+              <input matInput type="date" formControlName="previsaoentrega">
+              <mat-error class="form-error">Obrigatório.</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Tipo alimentício</mat-label>
+              <mat-select formControlName="tipo" [compareWith]="compararObjetos">
+                <mat-option>
+                  <ngx-mat-select-search [formControl]="tipoFiltroCtrl"></ngx-mat-select-search>
                 </mat-option>
-              }
-            </mat-select>
-            <mat-error>Tipo alimentício é obrigatório.</mat-error>
-          </mat-form-field>
-          <mat-form-field class="col-md-9">
-            <mat-label>Tipo unidade</mat-label>
-            <input matInput type="text" formControlName="tipound">
-            <mat-error>Tipo unidade é obrigatória.</mat-error>
-          </mat-form-field>
-          <hr class="mb-4">
-          <div class="row">
-            <button class="btn btn-primary" type="submit">
+                @for (tipo of tipoFiltrado | async ; track tipo){
+                  <mat-option [value]="tipo">
+                    {{ tipo.nome }}
+                  </mat-option>
+                }
+              </mat-select>
+              <mat-error class="form-error">Obrigatório.</mat-error>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field class="full-width">
+              <mat-label>Observação</mat-label>
+              <textarea rows="4" matInput type="text" formControlName="observacao"></textarea>
+            </mat-form-field>
+          </div>
+
+          <div class="filter-row">
+            <mat-form-field>
+              <mat-label>Qtd.</mat-label>
+              <input matInput type="number" formControlName="qtd">
+              <mat-error class="form-error">Obrigatório.</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Tipo unidade</mat-label>
+              <input matInput type="text" formControlName="tipound">
+              <mat-error class="form-error">Obrigatório.</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="action-btns">
+            <button class="btn-basic" type="submit">
               @if(isEditando){
                 Atualizar cronograma
               } @else {
                 Adicionar cronograma
               }
             </button>
-            <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetForm()">
+            <button type="reset" class="btn-basic btn-var-dark" (click)="resetForm()">
               Cancelar
             </button>
           </div>
         </div>
       </form>
-    </div>
+
+    </section>
   </div>
 }
 
@@ -72,44 +102,30 @@
     </div>
   }
 
-
-    <table class="table table-secondary mt-2">
+<section id="" class="table-responsive">
+  <table>
+    @for(grupo of cronoAgrupado; track grupo.monthYear){
       <thead>
-      <th>Observação</th>
-      <th>Qtd</th>
-      <th>Und</th>
-      <th>Tipo Alimentício</th>
-      <th>Previsão de entrega</th>
+      <tr>
+        <th colspan="5">{{grupo.monthYear | date:"MMMM 'de' yyyy" : 'UTC' : 'pt'}}</th>
+      </tr>
       </thead>
-      <tbody>
-        @for (c of c; track c.id) {
-          @if(c.usuario.id === usuLogado){
-            <tr>
-              <td>
-                {{ c.observacao }}
-              </td>
-              <td>
-                {{ c.qtd }}
-              </td>
-              <td>
-                {{ c.tipound }}
-              </td>
-              <td>
-                {{c.tipo.nome }}
-              </td>
-              <td>
-                {{c.previsaoentrega | date: "MMMM 'de' yyyy" : 'UTC' : 'pt'}}
-              </td>
-              <td class="text-end">
-                <button mat-button (click)="editandocronograma(c)">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-button (click)="excluircronograma(c)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </td>
-            </tr>
-          }
-           }
-      </tbody>
-    </table>
+
+      @for(item of grupo.items ; track item.id){
+        <tbody>
+        <tr>
+          <td>Edital</td>
+          <td>Alimento</td>
+          <td>Qtd.</td>
+          <td>Observação</td>
+          <td class="table-actions">
+            <i class="fa-regular fa-pen-to-square" (click)="editandocronograma(item)"></i>
+            <i class="fa-regular fa-trash-can" (click)="excluircronograma(item)"></i>
+            <i class="fa-solid fa-check"></i>
+          </td>
+        </tr>
+        </tbody>
+      }
+    }
+  </table>
+</section>

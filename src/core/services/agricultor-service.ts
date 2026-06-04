@@ -19,8 +19,8 @@ export class AgricultorService {
     return this.httpClient.get<Agricultor>(env.apiUrl + '/agricultor/id/' + id);
   }
 
-  buscarPorAny(param: string): Observable<Agricultor>{
-    return this.httpClient.get<Agricultor>(env.apiUrl + '/agricultor/buscar/' + param);
+  buscarPorAny(param: string): Observable<Agricultor[]>{
+    return this.httpClient.get<Agricultor[]>(env.apiUrl + '/agricultor/buscar/' + param);
   }
 
   create(agricultor: Agricultor): Observable<Agricultor> {

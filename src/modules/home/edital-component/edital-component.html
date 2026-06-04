@@ -46,33 +46,40 @@
 </section>
 
 @if (formOpen) {
-  <form [formGroup]="form" (ngSubmit)="isEditando? atualizarEdital() : adicionarEdital()">
-    <div class="row">
-      <input type="hidden" formControlName="id">
-      <mat-form-field class="col-md-6 mb-3">
-        <mat-label>Nome</mat-label>
-        <input matInput type="text" formControlName="nome">
-        <mat-error>Nome do edital é obrigatório.</mat-error>
-      </mat-form-field>
-      <mat-form-field class="col-md-6 mb-3">
-        <mat-label>Observação</mat-label>
-        <input matInput type="text" formControlName="observacao">
-      </mat-form-field>
-      <hr class="mb-4">
-      <div class="row">
-        <button class="btn btn-primary" type="submit">
-          @if (isEditando) {
-            Atualizar edital
-          } @else {
-            Adicionar edital
-          }
-        </button>
-        <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetForm()">
-          Cancelar
-        </button>
-      </div>
-    </div>
-  </form>
+  <div class="modal-overlay">
+    <section class="modal-content card">
+      @if(isEditando){
+        <h2>Editar Edital</h2>
+      }@else{
+        <h2>Novo Edital</h2>
+      }
+      <form [formGroup]="form" (ngSubmit)="isEditando? atualizarEdital() : adicionarEdital()">
+        <input type="hidden" formControlName="id">
+        <mat-form-field class="full-width">
+          <mat-label>Nome</mat-label>
+          <input matInput type="text" formControlName="nome">
+          <mat-error class="form-error">Nome do edital é obrigatório.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>Observação (opcional)</mat-label>
+          <textarea matInput type="text" formControlName="observacao"></textarea>
+        </mat-form-field>
+
+        <div class="action-btns">
+          <button class="btn-basic" type="submit">
+            @if (isEditando) {
+              Atualizar edital
+            } @else {
+              Adicionar edital
+            }
+          </button>
+          <button type="reset" class="btn-basic btn-var-dark" (click)="resetForm()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
 }
 
 @if (errorMessage != '') {

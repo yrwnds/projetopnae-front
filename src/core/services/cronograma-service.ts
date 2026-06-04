@@ -19,8 +19,8 @@ export class CronogramaService {
     return this.httpClient.get<Cronograma>(env.apiUrl + '/cronograma/id/' + id);
   }
 
-  buscarPorAny(param: string): Observable<Cronograma>{
-    return this.httpClient.get<Cronograma>(env.apiUrl + '/cronograma/buscar/' + param);
+  buscarPorAny(param: string): Observable<Cronograma[]>{
+    return this.httpClient.get<Cronograma[]>(env.apiUrl + '/cronograma/buscar/' + param);
   }
 
   buscarPorData(data: Date): Observable<Cronograma>{

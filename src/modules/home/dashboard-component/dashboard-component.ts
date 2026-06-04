@@ -14,10 +14,11 @@ import {ProdutoentregaService} from '../../../core/services/produtoentrega-servi
 import {CanvasJSAngularChartsModule} from '@canvasjs/angular-charts';
 import {MatButton} from '@angular/material/button';
 import {DatePipe} from '@angular/common';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-component',
-  imports: [FullCalendarModule, CanvasJSAngularChartsModule, MatButton, DatePipe],
+  imports: [FullCalendarModule, CanvasJSAngularChartsModule, MatButton, DatePipe, RouterLink],
   templateUrl: './dashboard-component.html',
   styleUrl: './dashboard-component.css',
 })

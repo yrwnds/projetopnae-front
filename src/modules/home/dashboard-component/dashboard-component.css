@@ -51,3 +51,7 @@
   color: white;
   margin-top: 20px;
 }
+
+.modal-content{
+  width: 1000px;
+}

@@ -44,37 +44,40 @@
           <button type="button" class="btn-close" (click)="fechar()"></button>
         </div>
         <p>Entrega realizada em {{entrega.dataentrega | date:'fullDate' : 'UTC' : 'pt'}}</p>
-        @for(p of produtos ; track p.id){
-          <h4>{{p.tipo.nome}}</h4>
-        }
         <h4>Produtos</h4>
         <table>
           <tr>
-            <th>1</th>
-            <th>2</th>
-            <th>3</th>
+            <th>Alimento</th>
+            <th>Observação</th>
+            <th>Qtd.</th>
+            <th>Agricultor</th>
           </tr>
-          <tr>
-            <td>1</td>
-          </tr>
+          @for(p of produtos ; track p.id){
+            <tr>
+              <td>{{p.tipo.nome}}</td>
+              <td>{{p.observacao}}</td>
+              <td>{{p.qtd}} {{p.tipound}}</td>
+              <td>{{p.agricultor}}</td>
+            </tr>
+          }
         </table>
       </div>
     </div>
   </div>
 }
 
-<section class="btn-cards">
+<section class="btn-cards" routerLink="../entrega">
   <button class="btn-card" style="background-color: #30A26B;">
     <h2>Registrar nova entrega de alimento</h2>
     <i class="fa-solid fa-chevron-right"></i>
   </button>
 
-  <button class="btn-card" style="background-color: #ADD52B;">
+  <button class="btn-card" routerLink="../cronograma" style="background-color: #ADD52B;">
     <h2>Registrar cronograma de entrega</h2>
     <i class="fa-solid fa-chevron-right"></i>
   </button>
 
-  <button class="btn-card" style="background-color: #D0DA48;">
+  <button class="btn-card" routerLink="../edital" style="background-color: #D0DA48;">
     <h2>Registrar novo Edital</h2>
     <i class="fa-solid fa-chevron-right"></i>
   </button>

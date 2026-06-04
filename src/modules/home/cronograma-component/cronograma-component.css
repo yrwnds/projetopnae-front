@@ -1,0 +1,20 @@
+.table-responsive {
+  border: 0;
+  border-radius: 0;
+  height: calc(100vh - 225px)
+}
+
+table {
+  text-align: left;
+}
+
+thead th {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+
