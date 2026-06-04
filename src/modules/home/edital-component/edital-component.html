@@ -34,8 +34,8 @@
               <td>{{ e.nome }}</td>
               <td>{{ e.observacao }}</td>
               <td class="table-actions">
-                <i (click)="editandoEdital(e)" class="fa-regular fa-pen-to-square"></i>
-                <i (click)="excluirEdital(e)" class="fa-regular fa-trash-can"></i>
+                <mat-icon fontIcon="edit"  (click)="editandoEdital(e)"></mat-icon>
+                <mat-icon fontIcon="delete"  (click)="excluirEdital(e)"></mat-icon>
               </td>
             }
           </tr>

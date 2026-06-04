@@ -102,7 +102,7 @@
     </div>
   }
 
-<section id="" class="table-responsive">
+<section class="table-responsive">
   <table>
     @for(grupo of cronoAgrupado; track grupo.monthYear){
       <thead>
@@ -114,14 +114,12 @@
       @for(item of grupo.items ; track item.id){
         <tbody>
         <tr>
-          <td>Edital</td>
-          <td>Alimento</td>
-          <td>Qtd.</td>
-          <td>Observação</td>
+          <td>{{ item.tipo.nome }}</td>
+          <td>{{ item.qtd }} {{item.tipound}}</td>
+          <td>{{ item.observacao}}</td>
           <td class="table-actions">
-            <i class="fa-regular fa-pen-to-square" (click)="editandocronograma(item)"></i>
-            <i class="fa-regular fa-trash-can" (click)="excluircronograma(item)"></i>
-            <i class="fa-solid fa-check"></i>
+            <mat-icon fontIcon="edit" (click)="editandocronograma(item)"></mat-icon>
+            <mat-icon fontIcon="delete" (click)="excluircronograma(item)"></mat-icon>
           </td>
         </tr>
         </tbody>

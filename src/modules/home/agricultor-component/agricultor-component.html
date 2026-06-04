@@ -34,8 +34,8 @@
               <td>{{ a.nome }}</td>
               <td>{{ a.contato }}</td>
               <td class="table-actions">
-                <i (click)="editandoAgricultor(a)" class="fa-regular fa-pen-to-square"></i>
-                <i (click)="excluirAgricultor(a)" class="fa-regular fa-trash-can"></i>
+                <mat-icon fontIcon="edit"  (click)="editandoAgricultor(a)"></mat-icon>
+                <mat-icon fontIcon="delete"  (click)="excluirAgricultor(a)"></mat-icon>
               </td>
             }
           </tr>

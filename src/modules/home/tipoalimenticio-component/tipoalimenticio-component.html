@@ -81,8 +81,8 @@
             }
             @if (t.usuario?.id === usuLogado) {
               <td class="table-actions">
-                <i (click)="editandoTipoalimenticio(t)" class="fa-regular fa-pen-to-square"></i>
-                <i (click)="excluirTipoalimenticio(t)" class="fa-regular fa-trash-can"></i>
+                <mat-icon fontIcon="edit"  (click)="editandoTipoalimenticio(t)"></mat-icon>>
+                <mat-icon fontIcon="delete"  (click)="excluirTipoalimenticio(t)"></mat-icon>
               </td>
             }
           </tr>

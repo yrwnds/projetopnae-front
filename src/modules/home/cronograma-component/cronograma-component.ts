@@ -64,7 +64,7 @@ export class CronogramaComponent {
       id: [null],
       observacao: [null],
       qtd: [null, [Validators.required]],
-      tipound: [null],
+      tipound: [null, [Validators.required]],
       previsaoentrega: [null, [Validators.required]],
       tipo: [null, [Validators.required]],
     })
