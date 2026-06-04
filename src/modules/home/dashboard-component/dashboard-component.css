@@ -1,0 +1,53 @@
+.btn-cards{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.btn-card{
+  display: flex;
+  flex-direction: column;
+  min-height: 120px;
+  color: white;
+  padding: 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-bottom: 20px;
+}
+
+
+.btn-cards i{margin-left: auto;margin-top: auto;font-size: larger;}
+.btn-card>h2{width: 60%;}
+.btn-card:hover{transform: translateY(-3px);}
+
+#stats-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.welcome, .entrega-detalhes{
+  text-align: center;
+  padding: 30px;
+}
+
+.welcome i{
+  font-size: 40px;
+  padding: 20px;
+  color: var(--primary-dark);
+}
+
+.welcome .modal-header-row{
+  padding: 20px;
+}
+
+.welcome h2{
+  font-weight: 500;
+}
+
+.welcome button{
+  background-color: var(--primary-dark);
+  color: white;
+  margin-top: 20px;
+}

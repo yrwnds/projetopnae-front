@@ -1,71 +1,93 @@
+<header>
+  <div>
+    <h2>Alimentos</h2>
+  </div>
+</header>
 
-<input type="text" placeholder="Procure um tipo alimentício" #filter />
-<button class="primary" type="button" (click)="filterResults(filter.value)">Buscar</button>
+<section class="filters-action">
+  <div class="filters">
+    <div class="search-filter"><i class="fa-solid fa-magnifying-glass" (click)="filterResults(filter.value)"></i><input
+      type="text" #filter placeholder="Pesquise..." (keydown.enter)="filterResults(filter.value)"></div>
+  </div>
+  <button class="btn-basic" (click)="openForm()">Adicionar <i class="fa-solid fa-plus"></i></button>
+</section>
 
-<button type="button" (click)="openForm()">Adicionar tipo alimentício</button>
-
-@if(formOpen){
-  <form [formGroup]="form" (ngSubmit)="isEditando? atualizarTipoalimenticio() : adicionarTipoalimenticio()">
-    <div class="row">
-      <input type="hidden" formControlName="id">
-      <mat-form-field class="col-md-6 mb-3">
-        <mat-label>Nome</mat-label>
-        <input matInput type="text" formControlName="nome">
-        <mat-error>Nome do tipo alimentício é obrigatório.</mat-error>
-      </mat-form-field>
-      <hr class="mb-4">
-      <div class="row">
-        <button class="btn btn-primary" type="submit">
-          @if(isEditando){
+@if (formOpen) {
+  <div class="modal-overlay">
+    <div class="modal-content card">
+      <h2>
+        @if (isEditando) {
+          Atualizar tipo alimentício
+        } @else {
+          Novo tipo alimentício
+        }
+      </h2>
+      <form [formGroup]="form" (ngSubmit)="isEditando? atualizarTipoalimenticio() : adicionarTipoalimenticio()">
+        <input type="hidden" formControlName="id">
+        <mat-form-field class="full-width">
+          <mat-label>Nome</mat-label>
+          <input matInput type="text" formControlName="nome">
+          <mat-error>Nome do tipo é obrigatório.</mat-error>
+        </mat-form-field>
+      </form>
+      <div class="action-btns">
+        <button class="btn-basic" type="submit">
+          @if (isEditando) {
             Atualizar tipo alimentício
-          } @else{
+          } @else {
             Adicionar tipo alimentício
           }
         </button>
-        <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetForm()">
+        <button type="reset" class="btn-basic btn-var-dark" (click)="resetForm()">
           Cancelar
         </button>
       </div>
     </div>
-  </form>
+  </div>
 }
 
-@if (errorMessage != ''){
+@if (errorMessage != '') {
   <div class="alert alert-warning alert-dismissible fade show" role="alert">
     <strong>{{ errorMessage }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
   </div>
 }
 
-@if (successMessage != ''){
+@if (successMessage != '') {
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     <strong>{{ successMessage }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
   </div>
 }
 
-<div>
-  @if(t.length === 0 ){
-    <p>Nenhum resultado encontrado.</p>
-  } @else{
-    @for(t of t ; track t.id){
-      @if(t.usuario?.id == null || t.usuario?.id === usuLogado){
-        <div>
-          <div>
-            <p>{{  t.nome  }}</p>
-          </div>
-        </div>
-        @if(t.usuario?.id === usuLogado){
-          <button (click)="editandoTipoalimenticio(t)">Editar</button>
-          <button (click)="excluirTipoalimenticio(t)">Excluir</button>
+<section id="" class="table-responsive">
+  <table>
+    <thead>
+    <tr>
+      <th>Alimento</th>
+      <th>Ações</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+      @if (t.length === 0) {
+        <p>Nenhum resultado encontrado.</p>
+      } @else {
+        @for (t of t; track t.id) {
+          <tr>
+            @if (t.usuario?.id == null || t.usuario?.id === usuLogado) {
+              <td>{{ t.nome }}</td>
+            }
+            @if (t.usuario?.id === usuLogado) {
+              <td class="table-actions">
+                <i (click)="editandoTipoalimenticio(t)" class="fa-regular fa-pen-to-square"></i>
+                <i (click)="excluirTipoalimenticio(t)" class="fa-regular fa-trash-can"></i>
+              </td>
+            }
+          </tr>
         }
       }
-    }
-  }
-
-
-
-
-
-
-</div>
+    </tbody>
+  </table>
+</section>

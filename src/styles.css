@@ -1,4 +1,236 @@
-/* You can add global styles to this file, and also import other style files */
+:root{
+  --primary-color: #30A26B;
+  --primary-dark: #0c5e38;
+  --primary-light: #EDF4F0;
+  --border-gray: #D9D9D9;
+  --text-black: #000000;
+  --text-light: #888888;
+  --bg-color: #ffffff;
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+body{
+  background-color: var(--bg-color);
+  color: var(--text-black);
+  margin: 0;
+  overflow: hidden;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+}
+
+header, main>section{margin-bottom: 25px;}
+ul{list-style: none; padding: 0;}
+a{color: inherit; text-decoration: none;}
+button{all: unset;}
+.lighter, h4 {color: var(--text-light);}
+h2{font-weight: 400; font-size: 27px;}
+h3, h4{font-weight:300;}
+
+/*sidebar*/
+#logo{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border-gray);
+  user-select: none;
+}
+
+#logo>i{/*mudar se for usar svg ou png*/
+  font-size: 35px;
+  color: var(--bg-color);
+  background-color: var(--primary-color);
+  border-radius: 7px;
+}
+
+/*main*/
+main{
+  flex: 1;
+  padding: 40px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+main>section{margin-bottom: 20px;}
+
+/*header*/
+header>div{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#logout{transition: 0.2s; text-decoration: none}
+#logout:hover{color:#db3e00}
+
+/*botões*/
+.btn-basic{
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  gap: 8px;
+  border: none;
+  transition: 0.2s;
+}
+
+.btn-var-border{
+  background-color: var(--bg-color);
+  color: var(--text-light);
+  box-shadow: inset 0 0 0 2px var(--border-gray);
+}
+
+.btn-var-dark{background-color: #595959;}
+.btn-basic:hover{opacity: 0.85;}
+
+/*misc*/
+.card{
+  background: var(--bg-color);
+  padding: 20px;
+  border: 1px solid var(--border-gray);
+}
+
+/*tabela*/
+.table-responsive{
+  height: 308px;
+  overflow: auto;
+  border: 1px solid var(--border-gray);
+  border-radius: 8px;
+  margin-top: 20px
+}
+
+table{
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+thead th{
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #F6F6F6;
+  font-weight: 500;
+}
+
+table tr>*{padding: 12px 50px;}
+tbody tr{color: var(--text-light);border-bottom: 1px solid var(--border-gray);}
+tbody tr:hover{background: #dfe9d8;cursor: pointer; transition: 0.3s ease-in}
+.table-actions{color: var(--text-black);width: 10%;white-space: nowrap;}
+.table-actions>.fa-plus{color: var(--primary-color);}
+
+/*filtros*/
+.search-filter, .filter-row>*{
+  border: 1px solid var(--border-gray);
+  border-radius: 8px;
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.search-filter input, .filter-row>*, select{
+  font-size: 16px;
+  padding: 8px 12px;
+  color: var(--text-light);
+  outline:none;
+}
+
+.filter-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/*pesquisa*/
+.filters-action{
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.search-filter{
+  display: flex;
+  align-items: center;
+}
+
+.search-filter input{
+  width:100%;
+  border:none;
+}
+
+.search-filter i{color: var(--text-light); cursor: pointer;}
+.filters{width: 50%;}
+.filter-row>*, select{background-color: var(--bg-color); cursor: pointer;}
+.action-btns button:first-of-type{margin-right: 15px;}
+
+
+/*modals*/
+.modal-overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(87, 92, 87, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content{
+  background: white;
+  border-radius: 12px;
+  width: 450px;
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn{
+  from{
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to{
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-content>div, .modal-content>h2{margin-bottom: 20px;}
+.modal-header-row i{cursor: pointer;}
+.modal-content .action-btns{text-align: right;}
+
+.modal-content>textarea, .modal-content>select{
+  border: 1px solid var(--border-gray);
+  width: 100%;
+  resize: vertical;
+  outline:none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+}
+
+/* alert */
+
+.alert{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  animation: slideIn 0.3s ease-in-out;
+}
+

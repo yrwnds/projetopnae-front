@@ -1,0 +1,10 @@
+.full-width{
+  width: 100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.table-responsive{
+  height: 80%;
+}

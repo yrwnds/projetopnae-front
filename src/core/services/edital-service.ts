@@ -19,8 +19,8 @@ export class EditalService {
     return this.httpClient.get<Edital>(env.apiUrl + '/edital/id/' + id);
   }
 
-  buscarPorAny(param: string): Observable<Edital>{
-    return this.httpClient.get<Edital>(env.apiUrl + '/edital/buscar/' + param);
+  buscarPorAny(param: string): Observable<Edital[]>{
+    return this.httpClient.get<Edital[]>(env.apiUrl + '/edital/buscar/' + param);
   }
 
   update(edital: Edital): Observable<Edital> {

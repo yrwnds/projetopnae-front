@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {RouterLink, RouterOutlet} from '@angular/router';
+import {RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {MatToolbar} from '@angular/material/toolbar';
 import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -10,6 +10,7 @@ import {UsuarioService} from '../../core/services/usuario-service';
 import moment from 'moment';
 import {DatePipe, registerLocaleData} from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import {MatSidenavContainer} from '@angular/material/sidenav';
 registerLocaleData(localePt, 'pt');
 
 @Component({
@@ -19,11 +20,14 @@ registerLocaleData(localePt, 'pt');
     MatToolbar,
     MatButton,
     RouterLink,
+    RouterLinkActive,
     MatIcon,
     MatFormField,
     MatMenuModule,
-    DatePipe
+    DatePipe,
+    MatSidenavContainer,
   ],
+
   templateUrl: './home-component.html',
   styleUrl: './home-component.css',
 })
@@ -31,17 +35,7 @@ export class HomeComponent {
   constructor(private authService: AuthService, private usuarioService: UsuarioService){
   }
 
-  usuNome = '';
-  horario = moment.now()
-
   ngOnInit(){
-    this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
-      {
-        next: (usu) => {
-          this.usuNome = usu.nome
-        }
-      }
-    )
   }
 
   protected logout(){

@@ -1,4 +1,26 @@
-<p>dashboard-component works!</p>
+<header>
+  <div>
+    <h2>Início</h2>
+  </div>
+  <h4>{{tempoDiaMsg}}, {{usuNome}}, o que você gostaria de fazer?</h4>
+</header>
+
+@if(showWelcome){
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <div class="welcome">
+        <i class="fa-brands fa-pagelines"></i>
+        <div class="modal-header-row">
+          <h2>Bem-vindo ao webapp de controle de entregas PNAE!</h2>
+        </div>
+        <p>É ótimo ter você aqui!</p>
+        <p>Parece que você ainda não registrou nenhuma entrega. Para começar, registre um edital e um agricultor.</p>
+        <button class="btn-basic" (click)="clearWelcome()">Ok</button>
+      </div>
+    </div>
+  </div>
+}
+
 @if (errorMessage != ''){
   <div class="alert alert-warning alert-dismissible fade show" role="alert">
     <strong>{{ errorMessage }}</strong>
@@ -14,18 +36,61 @@
 }
 
 @if(openDetalhes){
-  <h1>Clicou em Entrega {{entrega.id}}</h1>
-  <button type="button" (click)="fechar()">Fechar</button>
-  <p>{{entrega.dataentrega}}</p>
-  @for(p of produtos ; track p.id){
-    <h4>{{p.tipo.nome}}</h4>
-  }
-}
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <full-calendar [options]="calendarOptions"></full-calendar>
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <div class="entrega-detalhes">
+        <div class="modal-header-row">
+          <h2>Entrega - {{entrega.edital.nome}}</h2>
+          <button type="button" class="btn-close" (click)="fechar()"></button>
+        </div>
+        <p>Entrega realizada em {{entrega.dataentrega | date:'fullDate' : 'UTC' : 'pt'}}</p>
+        @for(p of produtos ; track p.id){
+          <h4>{{p.tipo.nome}}</h4>
+        }
+        <h4>Produtos</h4>
+        <table>
+          <tr>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+          </tr>
+          <tr>
+            <td>1</td>
+          </tr>
+        </table>
+      </div>
     </div>
-    <div class="col"></div>
   </div>
-</div>
+}
+
+<section class="btn-cards">
+  <button class="btn-card" style="background-color: #30A26B;">
+    <h2>Registrar nova entrega de alimento</h2>
+    <i class="fa-solid fa-chevron-right"></i>
+  </button>
+
+  <button class="btn-card" style="background-color: #ADD52B;">
+    <h2>Registrar cronograma de entrega</h2>
+    <i class="fa-solid fa-chevron-right"></i>
+  </button>
+
+  <button class="btn-card" style="background-color: #D0DA48;">
+    <h2>Registrar novo Edital</h2>
+    <i class="fa-solid fa-chevron-right"></i>
+  </button>
+</section>
+
+<section id="stats-row">
+  <div class="card">
+    <h4>Entregas do mês</h4>
+    <full-calendar [options]="calendarOptions"></full-calendar>
+  </div>
+
+  <div class="card">
+    graficos aq
+  </div>
+</section>
+
+<section class="card">
+  graficos aq
+</section>

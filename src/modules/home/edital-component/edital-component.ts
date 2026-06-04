@@ -66,6 +66,32 @@ export class EditalComponent {
     )
   }
 
+
+  filterResults(text: string) {
+    if(!text || text == ''){
+      this.editalService.getAll().subscribe(
+        {
+          next: (e) => {
+            this.e = e;
+          },
+          error: (err) => {
+            console.error('Erro ao buscar editais: ', err)
+          }
+        }
+      )
+    }
+    this.editalService.buscarPorAny(text).subscribe(
+      {
+        next: (e) => {
+          this.e = e;
+        },
+        error: (err) => {
+          console.error('Erro ao buscar editais: ', err)
+        }
+      }
+    )
+  }
+
   protected excluirEdital(edital: Edital){
     if(confirm("Tem certeza que quer deletar " + edital.nome + "?")){
       this.editalService.delete(edital.id as number).subscribe(

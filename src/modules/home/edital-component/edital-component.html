@@ -1,68 +1,94 @@
-<button type="button" (click)="openForm()">Adicionar edital</button>
+<header>
+  <div>
+    <h2>Editais</h2>
+  </div>
+</header>
+
+<section class="filters-action">
+  <div class="filters">
+    <div class="search-filter"><i class="fa-solid fa-magnifying-glass" (click)="filterResults(filter.value)"></i><input
+      type="text" #filter placeholder="Pesquise..." (keydown.enter)="filterResults(filter.value)"></div>
+  </div>
+  <button class="btn-basic" (click)="openForm()">Adicionar <i class="fa-solid fa-plus"></i></button>
+</section>
 
 
-<div>
-  @if(e.length === 0 ){
-    <p>Nenhum resultado encontrado.</p>
-  } @else{
-    @for(e of e ; track e.id){
-      @if(e.usuario?.id === usuLogado){
-        <div>
-          <div>
-            <p>{{  e.nome  }}, {{e.observacao}}</p>
-            <button (click)="editandoEdital(e)">Editar</button>
-            <button (click)="excluirEdital(e)">Excluir</button>
-          </div>
-        </div>
-      }
-    }
-  }
+<section id="" class="table-responsive">
+  <table>
+    <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Observação</th>
+      <th>Ações</th>
+    </tr>
+    </thead>
 
-  @if(formOpen){
-    <form [formGroup]="form" (ngSubmit)="isEditando? atualizarEdital() : adicionarEdital()">
-      <div class="row">
-        <input type="hidden" formControlName="id">
-        <mat-form-field class="col-md-6 mb-3">
-          <mat-label>Nome</mat-label>
-          <input matInput type="text" formControlName="nome">
-          <mat-error>Nome do edital é obrigatório.</mat-error>
-        </mat-form-field>
-        <mat-form-field class="col-md-6 mb-3">
-          <mat-label>Observação</mat-label>
-          <input matInput type="text" formControlName="observacao">
-        </mat-form-field>
-        <hr class="mb-4">
-        <div class="row">
-          <button class="btn btn-primary" type="submit">
-            @if(isEditando){
-            Atualizar edital
-            } @else{
-              Adicionar edital
+    <tbody>
+
+      @if (e.length === 0) {
+        <p>Nenhum resultado encontrado.</p>
+      } @else {
+        @for (e of e; track e.id) {
+          <tr>
+            @if (e.usuario?.id === usuLogado) {
+              <td>{{ e.nome }}</td>
+              <td>{{ e.observacao }}</td>
+              <td class="table-actions">
+                <i (click)="editandoEdital(e)" class="fa-regular fa-pen-to-square"></i>
+                <i (click)="excluirEdital(e)" class="fa-regular fa-trash-can"></i>
+              </td>
             }
-          </button>
-          <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetForm()">
-            Cancelar
-          </button>
-        </div>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</section>
+
+@if (formOpen) {
+  <form [formGroup]="form" (ngSubmit)="isEditando? atualizarEdital() : adicionarEdital()">
+    <div class="row">
+      <input type="hidden" formControlName="id">
+      <mat-form-field class="col-md-6 mb-3">
+        <mat-label>Nome</mat-label>
+        <input matInput type="text" formControlName="nome">
+        <mat-error>Nome do edital é obrigatório.</mat-error>
+      </mat-form-field>
+      <mat-form-field class="col-md-6 mb-3">
+        <mat-label>Observação</mat-label>
+        <input matInput type="text" formControlName="observacao">
+      </mat-form-field>
+      <hr class="mb-4">
+      <div class="row">
+        <button class="btn btn-primary" type="submit">
+          @if (isEditando) {
+            Atualizar edital
+          } @else {
+            Adicionar edital
+          }
+        </button>
+        <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetForm()">
+          Cancelar
+        </button>
       </div>
-    </form>
-  }
-
-  @if (errorMessage != ''){
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <strong>{{ errorMessage }}</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
     </div>
-  }
+  </form>
+}
 
-  @if (successMessage != ''){
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <strong>{{ successMessage }}</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
-    </div>
-  }
+@if (errorMessage != '') {
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{{ errorMessage }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+  </div>
+}
+
+@if (successMessage != '') {
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{ successMessage }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+  </div>
+}
 
 
 
 
-</div>

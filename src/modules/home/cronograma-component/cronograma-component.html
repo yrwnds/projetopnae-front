@@ -83,7 +83,7 @@
       </thead>
       <tbody>
         @for (c of c; track c.id) {
-          @if(c.usuario?.id === usuLogado){
+          @if(c.usuario.id === usuLogado){
             <tr>
               <td>
                 {{ c.observacao }}
