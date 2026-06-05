@@ -1,4 +1,22 @@
-<button (click)="entOpenForm()">Add entrega</button>
+<header>
+  <div>
+    <h2>Entregas Realizadas</h2>
+  </div>
+  <h4>Clique em uma entrega para visualizar os produtos entregues.</h4>
+</header>
+
+<section class="filters-action">
+  <div class="filters">
+    <input type="date" #datestart>
+    <input type="date" #dateend>
+    <i class="fa-solid fa-magnifying-glass" (click)="searchDateBetween(datestart.value, dateend.value)"></i>
+  </div>
+  <div class="action-btns">
+    <button class="btn-basic" (click)="entOpenForm()">Adicionar <i class="fa-solid fa-plus"></i></button>
+    <button class="btn-basic btn-var-border">Exportar <i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+  </div>
+</section>
+
 @if (errorMessage != ''){
   <div class="alert alert-warning alert-dismissible fade show" role="alert">
     <strong>{{ errorMessage }}</strong>

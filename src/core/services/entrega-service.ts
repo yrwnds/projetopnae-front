@@ -35,8 +35,8 @@ export class EntregaService {
     return this.httpClient.get<Entrega>(env.apiUrl + '/entrega/data/' + data);
   }
 
-  buscarPorDataBetween(start: Date, end: Date): Observable<Entrega>{
-    return this.httpClient.get<Entrega>(env.apiUrl + '/entrega/entredata/' + start + '/' + end);
+  buscarPorDataBetween(start: string, end: string): Observable<Entrega[]>{
+    return this.httpClient.get<Entrega[]>(env.apiUrl + '/entrega/entredata/' + start + '/' + end);
   }
   update(entrega: Entrega): Observable<Entrega> {
     return this.httpClient.put<Entrega>(env.apiUrl + '/entrega', entrega);

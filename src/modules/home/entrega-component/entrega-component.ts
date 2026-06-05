@@ -166,6 +166,32 @@ export class EntregaComponent {
     }
   }
 
+  searchDateBetween(dataStart: string, dataEnd: string){
+    if(dataStart == '' && dataEnd == ''){
+      this.entregaService.getAll().subscribe(
+        {
+          next: (e) => {
+            this.e = e;
+          },
+          error: (err) => {
+            console.error('Erro ao buscar entregas', err)
+          }
+        }
+      )
+    }
+    this.entregaService.buscarPorDataBetween(dataStart, dataEnd).subscribe(
+      {
+        next: (e) => {
+          this.e = e;
+        },
+        error: (err) => {
+          console.error('Erro ao buscar entregas databetween', err)
+        }
+      }
+    )
+  }
+
+
   compararObjetos(o1: any, o2: any): boolean {
     return o1 && o2 ? o1.id === o2.id : o1 === o2;
   }
