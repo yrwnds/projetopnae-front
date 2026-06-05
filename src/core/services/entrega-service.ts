@@ -31,8 +31,8 @@ export class EntregaService {
     return this.httpClient.get<Entrega>(env.apiUrl + '/entrega/id/' + id);
   }
 
-  buscarPorData(data: Date): Observable<Entrega>{
-    return this.httpClient.get<Entrega>(env.apiUrl + '/entrega/data/' + data);
+  buscarPorData(data: string): Observable<Entrega[]>{
+    return this.httpClient.get<Entrega[]>(env.apiUrl + '/entrega/data/' + data);
   }
 
   buscarPorDataBetween(start: string, end: string): Observable<Entrega[]>{

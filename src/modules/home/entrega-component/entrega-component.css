@@ -1,0 +1,14 @@
+
+.data-search input{
+  background-color: var(--primary-light);
+  color: var(--primary-color);
+  padding: 10px;
+  border: 2px solid var(--border-gray);
+  border-radius: 6px;
+  outline: none;
+  margin: 4px;
+}
+
+small{
+  color: var(--text-light);
+}

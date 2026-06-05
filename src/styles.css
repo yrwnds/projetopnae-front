@@ -122,9 +122,22 @@ thead th{
 
 table tr>*{padding: 12px 50px;}
 tbody tr{color: var(--text-light);border-bottom: 1px solid var(--border-gray);}
-tbody tr:hover{background: #dfe9d8;cursor: pointer; transition: 0.3s ease-in}
+tbody tr:hover{background: #dfe9d8;cursor: pointer; transition: 0.1s ease-in}
 .table-actions{color: var(--text-black);width: 10%;white-space: nowrap;}
 .table-actions>.fa-plus{color: var(--primary-color);}
+
+
+.delete:hover{
+  color:#db3e00;
+  transition: 0.2s ease;
+}
+
+.clickable{
+  transition: transform 0.01s ease
+}
+.clickable:active{
+  transform: translateY(1px);
+}
 
 /*filtros*/
 .search-filter, .filter-row>*{
@@ -162,6 +175,14 @@ tbody tr:hover{background: #dfe9d8;cursor: pointer; transition: 0.3s ease-in}
   width:100%;
   border:none;
 }
+
+
+.fa-magnifying-glass:hover{
+  transform: scale(1.1);
+  cursor: pointer;
+  transition: transform 0.2s ease
+}
+
 
 .search-filter i{color: var(--text-light); cursor: pointer;}
 .filters{width: 50%;}
@@ -250,3 +271,13 @@ tbody tr:hover{background: #dfe9d8;cursor: pointer; transition: 0.3s ease-in}
   color: var(--text-light);
   outline:none;
 }
+
+.ngx-mat-select-search-inner {
+  background-color: #ffffff !important;
+}
+
+.mat-mdc-select-panel,
+.mat-select-panel {
+  background-color: #ffffff !important;
+}
+

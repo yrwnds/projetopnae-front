@@ -29,7 +29,6 @@
           <input matInput type="text" formControlName="nome">
           <mat-error>Nome do tipo é obrigatório.</mat-error>
         </mat-form-field>
-      </form>
       <div class="action-btns">
         <button class="btn-basic" type="submit">
           @if (isEditando) {
@@ -42,6 +41,7 @@
           Cancelar
         </button>
       </div>
+      </form>
     </div>
   </div>
 }
@@ -81,7 +81,7 @@
             }
             @if (t.usuario?.id === usuLogado) {
               <td class="table-actions">
-                <mat-icon fontIcon="edit"  (click)="editandoTipoalimenticio(t)"></mat-icon>>
+                <mat-icon fontIcon="edit"  (click)="editandoTipoalimenticio(t)"></mat-icon>
                 <mat-icon fontIcon="delete"  (click)="excluirTipoalimenticio(t)"></mat-icon>
               </td>
             }

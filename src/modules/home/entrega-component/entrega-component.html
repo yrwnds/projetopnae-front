@@ -5,177 +5,215 @@
   <h4>Clique em uma entrega para visualizar os produtos entregues.</h4>
 </header>
 
-<section class="filters-action">
+<section class="filters-action data-search">
   <div class="filters">
+    <small>De</small>
     <input type="date" #datestart>
+    <small>Até</small>
     <input type="date" #dateend>
-    <i class="fa-solid fa-magnifying-glass" (click)="searchDateBetween(datestart.value, dateend.value)"></i>
+    <i class="fa-solid fa-magnifying-glass search-filter"
+       (click)="searchDateBetween(datestart.value, dateend.value)"></i>
   </div>
   <div class="action-btns">
     <button class="btn-basic" (click)="entOpenForm()">Adicionar <i class="fa-solid fa-plus"></i></button>
-    <button class="btn-basic btn-var-border">Exportar <i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+    <button class="btn-basic btn-var-border" (click)="generatePdf()"> Exportar <i class="fa-solid fa-arrow-right-from-bracket"></i></button>
   </div>
 </section>
 
-@if (errorMessage != ''){
+@if (errorMessage != '') {
   <div class="alert alert-warning alert-dismissible fade show" role="alert">
     <strong>{{ errorMessage }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
   </div>
 }
 
-@if (successMessage != ''){
+@if (successMessage != '') {
   <div class="alert alert-success alert-dismissible fade show" role="alert">
     <strong>{{ successMessage }}</strong>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
   </div>
 }
 
-@if(openFormEnt){
-  <form [formGroup]="formEnt" (ngSubmit)="isEditandoEnt? atualizarEntrega() : addEntrega()">
-    <div class="row">
-      <input type="hidden" formControlName="usuario">
-      <input type="hidden" formControlName="id">
-      <mat-form-field class="col-md-10 mb-3">
-        <mat-label>Edital</mat-label>
-        <mat-select formControlName="edital" [compareWith]="compararObjetos">
-          @for (ed of ed ; track ed.id){
-            <mat-option [value]="ed">
-              {{ ed.nome }}
-            </mat-option>
-          }
-        </mat-select>
-        <mat-error>Edital é obrigatório.</mat-error>
-      </mat-form-field>
-      <mat-form-field  class="col-3">
-        <mat-label>Data</mat-label>
-        <input matInput type="date" formControlName="dataentrega">
-        <mat-error>Data é obrigatório.</mat-error>
-      </mat-form-field>
-      <hr class="mb-4">
-      <div class="row">
-        <button class="btn btn-primary" type="submit">
-          @if(isEditandoEnt){
-            Editar entrega
-          }@else{
-            Adicionar Entrega
-          }
-        </button>
-        <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetFormEnt()">
-          Cancelar
-        </button>
-      </div>
+@if (openFormEnt) {
+  <div class="modal-overlay">
+    <div class="modal-content card">
+      <h2>
+        @if (isEditandoEnt) {
+          Editar Entrega
+        } @else {
+          Nova Entrega
+        }
+      </h2>
+      <form [formGroup]="formEnt" (ngSubmit)="isEditandoEnt? atualizarEntrega() : addEntrega()">
+        <mat-form-field class="full-width">
+          <mat-label>Edital</mat-label>
+          <mat-select formControlName="edital" [compareWith]="compararObjetos">
+            @for (ed of ed; track ed.id) {
+              @if(ed.usuario.id === usuLogado){
+                <mat-option [value]="ed">
+                  {{ ed.nome }}
+                </mat-option>
+              }
+            }
+          </mat-select>
+          <mat-error class="form-error">Edital é obrigatório.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>Data</mat-label>
+          <input matInput type="date" formControlName="dataentrega">
+          <mat-error class="form-error">Data é obrigatório.</mat-error>
+        </mat-form-field>
+        <div class="action-btns">
+          <button class="btn-basic" type="submit">
+            @if (isEditandoEnt) {
+              Editar entrega
+            } @else {
+              Adicionar Entrega
+            }
+          </button>
+          <button (click)="resetFormEnt()" type="reset" class="btn-basic btn-var-dark">Cancelar</button>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
 }
 
+<section id="" class="table-responsive">
+  <table>
+    <thead>
+    <tr>
+      <th>Edital</th>
+      <th>Data</th>
+      <th>Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+      @if (e.length === 0) {
+        <p>Nenhum resultado encontrado.</p>
+      }
+      @for (e of e; track e.id) {
+        @if (e.usuario.id === usuLogado) {
+          <tr class="clickable" (click)="buscaProdutosPorId(e)">
+            <td>{{ e.edital.nome }}</td>
+            <td>{{ e.dataentrega | date:'fullDate' : 'UTC' : 'pt' }}</td>
+            <td class="table-actions">
+              <mat-icon fontIcon="add" (click)="addingProdutos(e.id)"></mat-icon>
+              <mat-icon fontIcon="edit" (click)="editandoEntrega(e)"></mat-icon>
+              <mat-icon fontIcon="delete" class="delete" (click)="excluirEntrega(e)"></mat-icon>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</section>
 
-<table>
-  <tr>
-    <th>Edital</th>
-    <th>Data</th>
-    <th>Ações</th>
-  </tr>
-  @if (e.length === 0) {
-  <p>Nenhum resultado encontrado.</p>
-} @else {
-  @for (e of e; track e.id) {
-    @if(e.usuario.id === usuLogado){
-      <tr class="clickable" (click)="buscaProdutosPorId(e)">
-        <td>{{ e.edital.nome }}</td>
-        <td>{{ e.dataentrega | date:'fullDate' : 'UTC' : 'pt'}}</td>
-        <td><button (click)="addingProdutos(e.id)">Add produto</button></td>
-        <td><button (click)="editandoEntrega(e)">Editar entrega</button></td>
-        <td><button (click)="excluirEntrega(e)">Excluir entrega</button></td>
-      </tr>
-    }
-  }
-}
-</table>
-<table>
-  <tr>
-    <th>Tipo alimenticio</th>
-    <th>Observacao</th>
-    <th>Qtd.</th>
-    <th>Und.</th>
-    <th>Agricultor</th>
-    <th>Ações</th>
-  </tr>
+<section class="table-responsive">
+  <table>
+    <thead>
+    <tr>
+      <th>Alimento</th>
+      <th>Observação</th>
+      <th>Qtd.</th>
+      <th>Agricultor</th>
+      <th>Ações</th>
+    </tr>
+    </thead>
 
-  @if (p.length === 0) {
-    <p>Clique em uma entrega para mostrar os produtos.</p>
-  } @else {
-    @for (p of p; track p.id) {
-      <tr>
-      <td>{{p.tipo.nome}}</td>
-      <td>{{p.observacao}}</td>
-      <td>{{p.qtd}}</td>
-      <td>{{p.tipound}}</td>
-      <td>{{p.agricultor.nome}}</td>
-      <td><button type="button" (click)="editandoProduto(p)">Editar</button>
-      <button type="button" (click)="excluirProduto(p)">Excluir</button></td>
-      </tr>
-    }
-  }
+    <tbody>
+      @if (p.length === 0) {
+        <p>Clique em uma entrega para mostrar os produtos.</p>
+      } @else {
+        @for (p of p; track p.id) {
+          <tr>
+            <td>{{ p.tipo.nome }}</td>
+            <td>{{ p.observacao }}</td>
+            <td>{{ p.qtd }} {{ p.tipound }}</td>
+            <td>{{ p.agricultor.nome }}</td>
+            <td>
+              <mat-icon fontIcon="edit" (click)="editandoProduto(p)"></mat-icon>
+              <mat-icon fontIcon="delete" class="delete" (click)="excluirProduto(p)"></mat-icon>
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</section>
 
-</table>
+@if (openFormProd) {
+  <div class="modal-overlay">
+    <section class="modal-content card">
+      <h2>
+        @if (isEditandoProd) {
+          Editar Produto
+        } @else {
+          Novo Produto
+        }
+      </h2>
+      <form [formGroup]="formProd" (ngSubmit)="isEditandoProd? atualizarProduto() : addProduto()">
+        <input type="hidden" formControlName="id">
+        <mat-form-field class="full-width">
+          <mat-label>Observação</mat-label>
+          <textarea matInput type="text" formControlName="observacao"></textarea>
+        </mat-form-field>
 
-@if(openFormProd){
-  <form [formGroup]="formProd" (ngSubmit)="isEditandoProd? atualizarProduto() : addProduto()">
-    <div class="row">
-      <input type="hidden" formControlName="id">
-      <mat-form-field class="col-md-6 mb-3">
-        <mat-label>Observação</mat-label>
-        <input matInput type="text" formControlName="observacao">
-      </mat-form-field>
-      <mat-form-field class="col-md-10 mb-3">
-        <mat-label>Agricultor</mat-label>
-        <mat-select formControlName="agricultor" [compareWith]="compararObjetos">
-          @for (agr of a ; track agr.id){
-            <mat-option [value]="agr">
-              {{ agr.nome }}
-            </mat-option>
-          }
-        </mat-select>
-        <mat-error>Agricultor é obrigatório.</mat-error>
-      </mat-form-field>
-      <mat-form-field class="col-md-10 mb-3">
-        <mat-label>Tipo alimentício</mat-label>
-        <mat-select formControlName="tipo" [compareWith]="compararObjetos">
-          <mat-option>
-            <ngx-mat-select-search [formControl]="tipoFiltroCtrl"></ngx-mat-select-search>
-          </mat-option>
-          @for (tipo of tipoFiltrado | async ; track tipo){
-            <mat-option [value]="tipo">
-              {{ tipo.nome }}
-            </mat-option>
-          }
-        </mat-select>
-        <mat-error>Tipo alimentício é obrigatório.</mat-error>
-      </mat-form-field>
-      <mat-form-field  class="col-3">
-        <mat-label>Quantidade</mat-label>
-        <input matInput type="number" formControlName="qtd">
-        <mat-error>Deve ser número.</mat-error>
-      </mat-form-field>
-      <mat-form-field class="col-md-9">
-        <mat-label>Tipo de unidade</mat-label>
-        <input matInput type="text" formControlName="tipound">
-        <mat-error>Tipo de unidade é obrigatório (Exemplo: Kg, Unidade)</mat-error>
-      </mat-form-field>
-      <hr class="mb-4">
-      <div class="row">
-        <button class="btn btn-primary" type="submit">
-          @if(isEditandoProd){
-            Atualizar Produto
-          } @else {
-            Adicionar Produto
-          }
-        </button>
-        <button type="reset" class="btn btn-outline-dark mt-4" (click)="resetFormProd()">
-          Cancelar
-        </button>
-    </div>
-    </div>
-  </form>
+        <div class="filter-row">
+          <mat-form-field>
+            <mat-label>Agricultor</mat-label>
+            <mat-select formControlName="agricultor" [compareWith]="compararObjetos">
+              @for (agr of a; track agr.id) {
+                @if(agr.usuario.id === usuLogado){
+                  <mat-option [value]="agr">
+                    {{ agr.nome }}
+                  </mat-option>
+                }
+              }
+            </mat-select>
+            <mat-error class="form-error">Agricultor é obrigatório.</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Tipo alimentício</mat-label>
+            <mat-select formControlName="tipo" [compareWith]="compararObjetos">
+              <mat-option>
+                <ngx-mat-select-search [formControl]="tipoFiltroCtrl"></ngx-mat-select-search>
+              </mat-option>
+              @for (tipo of tipoFiltrado | async; track tipo) {
+                @if(tipo.usuario.id === usuLogado || tipo.usuario.id == null){
+                  <mat-option [value]="tipo">
+                    {{ tipo.nome }}
+                  </mat-option>
+                }
+              }
+            </mat-select>
+            <mat-error class="form-error">Tipo alimentício é obrigatório.</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="filter-row">
+          <mat-form-field>
+            <mat-label>Quantidade</mat-label>
+            <input matInput type="number" formControlName="qtd">
+            <mat-error class="form-error">Deve ser número.</mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Tipo de unidade</mat-label>
+            <input matInput type="text" formControlName="tipound">
+            <mat-error class="form-error">Tipo de unidade é obrigatório (Exemplo: Kg, Unidade)</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="action-btns">
+          <button class="btn-basic" type="submit">
+            @if (isEditandoProd) {
+              Atualizar Produto
+            } @else {
+              Adicionar Produto
+            }
+          </button>
+          <button type="reset" class="btn-basic btn-var-dark" (click)="resetFormProd()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
 }

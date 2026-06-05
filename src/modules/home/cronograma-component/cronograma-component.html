@@ -41,9 +41,9 @@
                   <ngx-mat-select-search [formControl]="tipoFiltroCtrl"></ngx-mat-select-search>
                 </mat-option>
                 @for (tipo of tipoFiltrado | async ; track tipo){
-                  <mat-option [value]="tipo">
-                    {{ tipo.nome }}
-                  </mat-option>
+                    <mat-option [value]="tipo">
+                      {{ tipo.nome }}
+                    </mat-option>
                 }
               </mat-select>
               <mat-error class="form-error">Obrigatório.</mat-error>
@@ -105,24 +105,25 @@
 <section class="table-responsive">
   <table>
     @for(grupo of cronoAgrupado; track grupo.monthYear){
-      <thead>
-      <tr>
-        <th colspan="5">{{grupo.monthYear | date:"MMMM 'de' yyyy" : 'UTC' : 'pt'}}</th>
-      </tr>
-      </thead>
-
+          <thead>
+          <tr>
+            <th colspan="5">{{grupo.monthYear | date:"MMMM 'de' yyyy" : 'UTC' : 'pt'}}</th>
+          </tr>
+          </thead>
       @for(item of grupo.items ; track item.id){
-        <tbody>
-        <tr>
-          <td>{{ item.tipo.nome }}</td>
-          <td>{{ item.qtd }} {{item.tipound}}</td>
-          <td>{{ item.observacao}}</td>
-          <td class="table-actions">
-            <mat-icon fontIcon="edit" (click)="editandocronograma(item)"></mat-icon>
-            <mat-icon fontIcon="delete" (click)="excluircronograma(item)"></mat-icon>
-          </td>
-        </tr>
-        </tbody>
+        @if(item.usuario.id === usuLogado){
+          <tbody>
+          <tr>
+            <td>{{ item.tipo.nome }}</td>
+            <td>{{ item.qtd }} {{item.tipound}}</td>
+            <td>{{ item.observacao}}</td>
+            <td class="table-actions">
+              <mat-icon fontIcon="edit" (click)="editandocronograma(item)"></mat-icon>
+              <mat-icon fontIcon="delete" (click)="excluircronograma(item)"></mat-icon>
+            </td>
+          </tr>
+          </tbody>
+        }
       }
     }
   </table>

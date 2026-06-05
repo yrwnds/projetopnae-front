@@ -114,15 +114,20 @@ export class CronogramaComponent {
   }
 
   agruparCronogramaPorMesAno(items: Cronograma[]) {
-      const sorted = [...items].sort((a, b) => new Date(b.previsaoentrega).getTime() - new Date(b.previsaoentrega).getTime());
+      const sorted = [...items].sort((a, b) => new Date(a.previsaoentrega).getTime() - new Date(b.previsaoentrega).getTime());
 
       const groupsMap = sorted.reduce((acc, item) => {
-        const monthYearStr = item.previsaoentrega.toLocaleString('default', {month: 'long'})
-
-        if(!acc[monthYearStr]){
-          acc[monthYearStr] = [];
+        let monthYearStr;
+        if(item.usuario.id === this.usuLogado){
+          monthYearStr = item.previsaoentrega.toLocaleString('default', {month: 'long'})
         }
-        acc[monthYearStr].push(item);
+        if(monthYearStr){
+          if(!acc[monthYearStr]){
+            acc[monthYearStr] = [];
+          }
+
+          acc[monthYearStr].push(item);
+        }
         return acc;
       }, {} as Record<string, Cronograma[]>);
 

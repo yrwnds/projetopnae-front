@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Entrega} from '../../../core/models/entrega';
 import {AuthService} from '../../../core/services/auth-service';
 import {EntregaService} from '../../../core/services/entrega-service';
@@ -10,7 +10,7 @@ import {TipoalimenticioService} from '../../../core/services/tipoalimenticio-ser
 import {AgricultorService} from '../../../core/services/agricultor-service';
 import {Agricultor} from '../../../core/models/agricultor';
 import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatOption, MatSelect, MatSelectModule } from '@angular/material/select';
+import {MatOption, MatSelect, MatSelectModule} from '@angular/material/select';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton} from '@angular/material/button';
 import {MatInput} from '@angular/material/input';
@@ -23,7 +23,12 @@ import {registerLocaleData} from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import moment from 'moment';
 import {ReplaySubject, Subject, takeUntil} from 'rxjs';
+
 registerLocaleData(localePt, 'pt');
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+
+(<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
 @Component({
   selector: 'app-entrega-component',
@@ -46,7 +51,7 @@ registerLocaleData(localePt, 'pt');
   styleUrl: './entrega-component.css',
 })
 export class EntregaComponent {
-  constructor(private fb: FormBuilder, private editalService: EditalService, private usuarioService: UsuarioService, private agricultorService: AgricultorService, private entregaService: EntregaService, private produtoService: ProdutoentregaService, private authService: AuthService, private tipoAlimenticioService: TipoalimenticioService ) {
+  constructor(private fb: FormBuilder, private editalService: EditalService, private usuarioService: UsuarioService, private agricultorService: AgricultorService, private entregaService: EntregaService, private produtoService: ProdutoentregaService, private authService: AuthService, private tipoAlimenticioService: TipoalimenticioService) {
     this.formEnt = this.fb.group(
       {
         id: [null],
@@ -56,16 +61,17 @@ export class EntregaComponent {
       }
     )
     this.formProd = this.fb.group({
-      id: [null],
-      entrega: [null],
-      observacao: [null],
-      qtd: [null, [Validators.required]],
-      tipound: [null],
-      agricultor: [null],
-      tipo: [null, [Validators.required]]
-    }
+        id: [null],
+        entrega: [null],
+        observacao: [null],
+        qtd: [null, [Validators.required]],
+        tipound: [null],
+        agricultor: [null],
+        tipo: [null, [Validators.required]]
+      }
     )
   }
+
   formProd: FormGroup;
   formEnt: FormGroup;
 
@@ -77,6 +83,8 @@ export class EntregaComponent {
   t: Tipoalimenticio[] = [];
   a: Agricultor[] = [];
   ed: Edital[] = [];
+
+  allProdutos: Produtoentrega[] = [];
 
   openFormProd: boolean = false;
   openFormEnt: boolean = false;
@@ -99,6 +107,16 @@ export class EntregaComponent {
     this.formProd.reset();
     this.formEnt.reset();
     this.p = [];
+    this.produtoService.getAll().subscribe(
+      {
+        next: (prod) => {
+          this.allProdutos = prod;
+        },
+        error: (err) => {
+          console.error('Erro ao buscar produtos: ', err);
+        }
+      }
+    )
     this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
       {
         next: (usu) => {
@@ -152,11 +170,11 @@ export class EntregaComponent {
       })
   }
 
-  protected filterTipo(){
+  protected filterTipo() {
     let search = this.tipoFiltroCtrl.value;
-    if(!search){
+    if (!search) {
       this.tipoFiltrado.next(this.t.slice())
-    } else{
+    } else {
       search = search!.toLowerCase()
     }
     if (typeof search === "string") {
@@ -166,8 +184,8 @@ export class EntregaComponent {
     }
   }
 
-  searchDateBetween(dataStart: string, dataEnd: string){
-    if(dataStart == '' && dataEnd == ''){
+  searchDateBetween(dataStart: string, dataEnd: string) {
+    if (dataStart == '' && dataEnd == '') {
       this.entregaService.getAll().subscribe(
         {
           next: (e) => {
@@ -178,17 +196,40 @@ export class EntregaComponent {
           }
         }
       )
-    }
-    this.entregaService.buscarPorDataBetween(dataStart, dataEnd).subscribe(
-      {
-        next: (e) => {
-          this.e = e;
-        },
-        error: (err) => {
-          console.error('Erro ao buscar entregas databetween', err)
+    } else if (dataStart == '' && dataEnd != '') {
+      this.entregaService.buscarPorData(dataEnd).subscribe(
+        {
+          next: (e) => {
+            this.e = e;
+          },
+          error: (err) => {
+            console.error('Erro ao buscar entregas data', err)
+          }
         }
-      }
-    )
+      )
+    } else if (dataEnd == '' && dataStart != '') {
+      this.entregaService.buscarPorData(dataStart).subscribe(
+        {
+          next: (e) => {
+            this.e = e;
+          },
+          error: (err) => {
+            console.error('Erro ao buscar entregas databetween', err)
+          }
+        }
+      )
+    } else {
+      this.entregaService.buscarPorDataBetween(dataStart, dataEnd).subscribe(
+        {
+          next: (e) => {
+            this.e = e;
+          },
+          error: (err) => {
+            console.error('Erro ao buscar entregas databetween', err)
+          }
+        }
+      )
+    }
   }
 
 
@@ -197,28 +238,28 @@ export class EntregaComponent {
   }
 
 
-  buscaProdutosPorId(entrega: Entrega){
-      this.produtoService.buscarPorIdEntrega(entrega.id).subscribe(
-        {
-          next: (p) => {
-            this.p = p;
+  buscaProdutosPorId(entrega: Entrega) {
+    this.produtoService.buscarPorIdEntrega(entrega.id).subscribe(
+      {
+        next: (p) => {
+          this.p = p;
         },
         error: (err) => {
           console.error('Erro ao buscar produtoentregas', err);
-    }
-    }
-      )
+        }
+      }
+    )
   }
 
-  protected excluirEntrega(entrega: Entrega){
-    if(confirm("Tem certeza que quer deletar " + entrega.dataentrega + "?")){
+  protected excluirEntrega(entrega: Entrega) {
+    if (confirm("Tem certeza que quer deletar " + entrega.dataentrega + "?")) {
       this.entregaService.delete(entrega.id as number).subscribe(
         {
           next: () => {
             this.e = this.e.filter(e => e.id !== e.id)
             this.ngOnInit()
           },
-          error: (err) =>{
+          error: (err) => {
             this.errorMessage = "Erro. " + JSON.stringify(err.error, ['message']);
             console.error('Erro ao excluir: ', err);
           }
@@ -227,15 +268,15 @@ export class EntregaComponent {
     }
   }
 
-  protected excluirProduto(produto: Produtoentrega){
-    if(confirm("Tem certeza que quer deletar " + produto.tipo + "?")){
+  protected excluirProduto(produto: Produtoentrega) {
+    if (confirm("Tem certeza que quer deletar " + produto.tipo + "?")) {
       this.produtoService.delete(produto.id as number).subscribe(
         {
           next: () => {
             this.p = this.p.filter(p => p.id !== produto.id)
             this.ngOnInit()
           },
-          error: (err) =>{
+          error: (err) => {
             this.errorMessage = "Erro. " + JSON.stringify(err.error, ['message']);
             console.error('Erro ao excluir: ', err);
           }
@@ -245,7 +286,7 @@ export class EntregaComponent {
 
   }
 
-  editandoProduto(produtoentrega: Produtoentrega){
+  editandoProduto(produtoentrega: Produtoentrega) {
     this.isEditandoProd = true;
     this.openFormProd = true;
     this.formProd.setValue({
@@ -259,8 +300,8 @@ export class EntregaComponent {
     })
   }
 
-  atualizarProduto(){
-    if(this.formProd.valid){
+  atualizarProduto() {
+    if (this.formProd.valid) {
       console.log("Entrou em formvalid atualizarprod")
       console.log('dados: ' + JSON.stringify(this.formProd.value))
       const {id, qtd, tipound, observacao, tipo, entrega, agricultor} = this.formProd.value;
@@ -278,12 +319,12 @@ export class EntregaComponent {
           }
         }
       )
-    } else{
+    } else {
       this.errorMessage = "Erro. Cheque validade dos dados."
     }
   }
 
-  addingProdutos(entregaId: number){
+  addingProdutos(entregaId: number) {
     this.openFormProd = true;
     this.formProd.reset()
     this.entregaId = entregaId;
@@ -291,11 +332,11 @@ export class EntregaComponent {
     console.log("EntregaProd = " + this.entregaId)
   }
 
-  entOpenForm(){
+  entOpenForm() {
     this.openFormEnt = true;
   }
 
-  protected editandoEntrega(entrega: Entrega){
+  protected editandoEntrega(entrega: Entrega) {
     this.openFormEnt = true;
     this.isEditandoEnt = true;
     console.log(JSON.stringify(entrega))
@@ -307,8 +348,8 @@ export class EntregaComponent {
     })
   }
 
-  protected atualizarEntrega(){
-    if(this.formEnt.valid){
+  protected atualizarEntrega() {
+    if (this.formEnt.valid) {
       console.log("Entrou em formvalid atualizarentrega")
       console.log('dados: ' + JSON.stringify(this.formEnt.value))
       const {id, dataentrega, edital, usuario} = this.formEnt.value;
@@ -327,17 +368,17 @@ export class EntregaComponent {
           }
         }
       )
-    } else{
+    } else {
       this.errorMessage = "Erro. Cheque validade dos dados."
     }
   }
 
-  addEntrega(){
+  addEntrega() {
     console.log('Validando form addentrega')
     console.log('dados:' + JSON.stringify(this.formEnt.value))
 
-    if(this.formEnt.valid){
-      const{id, edital, dataentrega} = this.formEnt.value;
+    if (this.formEnt.valid) {
+      const {id, edital, dataentrega} = this.formEnt.value;
 
       this.entregaService.create({id, edital, dataentrega} as Entrega).subscribe(
         {
@@ -355,12 +396,19 @@ export class EntregaComponent {
     }
   }
 
-  addProduto(){
+  addProduto() {
     console.log('Validando form adicionarproduto...');
     console.log('dados: ' + JSON.stringify(this.formProd.value))
-    if(this.formProd.valid){
-      const{id, observacao, qtd, tipound, agricultor, tipo}= this.formProd.value;
-      this.produtoService.create({id, observacao, qtd, tipound, agricultor, tipo} as Produtoentrega, this.entregaId).subscribe(
+    if (this.formProd.valid) {
+      const {id, observacao, qtd, tipound, agricultor, tipo} = this.formProd.value;
+      this.produtoService.create({
+        id,
+        observacao,
+        qtd,
+        tipound,
+        agricultor,
+        tipo
+      } as Produtoentrega, this.entregaId).subscribe(
         {
           next: () => {
             console.log('Criou com sucesso.');
@@ -373,13 +421,13 @@ export class EntregaComponent {
           }
         }
       )
-    } else{
+    } else {
       console.log('Form não valida');
       this.errorMessage = "Erro. Verifique a validade dos dados.";
     }
   }
 
-  clear(){
+  clear() {
     this.errorMessage = ''
     this.successMessage = ''
   }
@@ -389,13 +437,107 @@ export class EntregaComponent {
     this.openFormProd = false;
   }
 
-  resetFormEnt(){
+  resetFormEnt() {
     this.formEnt.reset();
     this.openFormEnt = false;
   }
 
-  // ngx-mat-select-search
 
+  /*GERADOR DE PDF*/
+
+
+  private buildTableBody(headers: string[]) {
+    const body: any[][] = [];
+
+    body.push(headers.map(header => ({text: header, style: 'tableHeader'})))
+
+    const criadoPorUserProd = this.allProdutos.filter(prod => prod.entrega.usuario.id === this.usuLogado);
+
+
+    criadoPorUserProd.forEach((row) => {
+      const dataRow = [
+        row.entrega.dataentrega,
+        row.entrega.edital.nome,
+        row.tipo.nome,
+        row.qtd,
+        row.tipound,
+        row.observacao,
+        row.agricultor.nome,
+      ]
+      body.push(dataRow);
+    })
+
+    return body;
+  }
+
+  getBase64ImageFromURL(url: string) {
+    return new Promise((resolve, reject) => {
+      var img = new Image();
+      img.setAttribute("crossOrigin", "anonymous");
+
+      img.onload = () => {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        var ctx = canvas.getContext("2d");
+        if(!ctx){
+          throw new Error('canvas context could not be initialized');
+        }
+        ctx.drawImage(img, 0, 0);
+
+        var dataURL = canvas.toDataURL("image/png");
+
+        resolve(dataURL);
+      };
+
+      img.onerror = error => {
+        reject(error);
+      };
+
+      img.src = url;
+    });
+  }
+
+  public async generatePdf(): Promise<void> {
+    const headerColuna = ['Data de Entrega', 'Edital', 'Alimento', 'Qt.', 'Und.', 'Observação', 'Agricultor']
+
+    const body = this.buildTableBody(headerColuna);
+
+    if (body.length <= 1) {
+      alert("Não há itens para exportar.");
+      return;
+    }
+
+    const docDefinition: any = {
+      content: [
+        {
+          image: await this.getBase64ImageFromURL('images/pnae_old_lg.png'),
+          height: 100,
+          margin: [0, 20, 0, 0],
+          alignment: 'right'
+        },
+        {
+          text: `Relatório de Entregas PNAE`,
+          style: 'header'
+        },
+        {
+          style: 'tableExample',
+          table: {
+            widths: [30, '*', 100, 20, 20, '*', 70],
+            body: body
+          }
+        }
+      ],
+      styles: {
+        header: {fontSize: 16, bold: true, margin: [0, 0, 0, 15]},
+        tableHeader: {bold: true, fontSize: 11, fillColor: '#858585'},
+        tableExample: {margin: [0, 5, 0, 15]}
+      }
+    };
+    const now: string = new Date().toISOString().split('T')[0];
+    pdfMake.createPdf(docDefinition).download(`relatorio_de_entregas_${now}.pdf`);
+  }
 
 
   protected readonly JSON = JSON;
