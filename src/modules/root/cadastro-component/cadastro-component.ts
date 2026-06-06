@@ -1,12 +1,14 @@
 import {Component, ErrorHandler} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatError, MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
 import {Router, RouterLink} from '@angular/router';
 import {MatCardActions} from '@angular/material/card';
 import {MatButton} from '@angular/material/button';
 import {MatInput} from '@angular/material/input';
 import {Usuario} from '../../../core/models/usuario';
 import {UsuarioService} from '../../../core/services/usuario-service';
+import {MatIcon} from '@angular/material/icon';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-cadastro-component',
@@ -19,6 +21,9 @@ import {UsuarioService} from '../../../core/services/usuario-service';
     MatLabel,
     ReactiveFormsModule,
     MatError,
+    MatIcon,
+    MatSuffix,
+    NgOptimizedImage
   ],
   templateUrl: './cadastro-component.html',
   styleUrl: './cadastro-component.css',

@@ -1,30 +1,46 @@
-<form class="d-flex flex-column" [formGroup]="form" (ngSubmit)="onSubmit()">
-<mat-form-field appearance="fill" class="w-100 mb-3">
-  <mat-label>E-mail</mat-label>
-  <input matInput type="text" formControlName="email">
-  <mat-error>
-    E-mail é obrigatório.
-  </mat-error>
-</mat-form-field>
-<mat-form-field appearance="fill" class="w-100 mb-2">
-  <mat-label>Senha</mat-label>
-  <input matInput type="password" autocomplete="current-password" formControlName="senha">
-  <mat-error>
-    Senha é obrigatória.
-  </mat-error>
-</mat-form-field>
-<button mat-raised-button type="submit" class="w-100 mb-2 login-button">
-  <span>Entrar</span>
-</button>
-@if (errorMessage != ''){
-  <div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong>{{ errorMessage }}</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
-  </div>
-}
-<mat-card-actions class="justify-content-center">
-  <div class="new-user">
-    Não tem conta? <a routerLink="/cadastro">Crie uma conta</a>
-  </div>
-</mat-card-actions>
-</form>
+<div class="auth">
+  <img ngSrc="/images/close-up-green-monstera-leaves-white-background.jpg" alt="Image" class="auth-bg" fill>
+
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h1>Login</h1>
+    <h4>Faça login para acessar o webapp de controle de entregas PNAE.</h4>
+    <div>
+      <div class="auth-box">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>E-mail</mat-label>
+          <input matInput type="text" formControlName="email">
+          <mat-icon matSuffix fontIcon="email"></mat-icon>
+          <mat-error class="form-error">
+            E-mail é obrigatório.
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="auth-box">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" autocomplete="current-password" formControlName="senha">
+          <mat-icon matSuffix fontIcon="lock"></mat-icon>
+          <mat-error class="form-error">
+            Senha é obrigatória.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="login-check">
+      <button type="submit" class="auth-button btn-basic">
+        <span>Entrar</span>
+      </button>
+      @if (errorMessage != '') {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>{{ errorMessage }}</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+        </div>
+      }
+    </div>
+    <mat-card-actions class="justify-content-center">
+      <div class="new-user">
+        Não tem conta? <a routerLink="/cadastro">Crie uma conta</a>
+      </div>
+    </mat-card-actions>
+  </form>
+</div>

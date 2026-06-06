@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
-import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatError, MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
 import {MatCardActions} from '@angular/material/card';
 import {Router, RouterLink} from '@angular/router';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {AuthService} from '../../../core/services/auth-service';
+import {NgOptimizedImage} from '@angular/common';
+import {MatIcon} from '@angular/material/icon';
 
 @Component({
   selector: 'app-login-component',
@@ -17,7 +19,10 @@ import {AuthService} from '../../../core/services/auth-service';
     RouterLink,
     MatLabel,
     ReactiveFormsModule,
-    MatError
+    MatError,
+    NgOptimizedImage,
+    MatIcon,
+    MatSuffix
   ],
   templateUrl: './login-component.html',
   styleUrl: './login-component.css',
