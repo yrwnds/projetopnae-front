@@ -179,11 +179,11 @@
                 <ngx-mat-select-search [formControl]="tipoFiltroCtrl"></ngx-mat-select-search>
               </mat-option>
               @for (tipo of tipoFiltrado | async; track tipo) {
-                @if(tipo.usuario.id === usuLogado || tipo.usuario.id == null){
-                  <mat-option [value]="tipo">
-                    {{ tipo.nome }}
-                  </mat-option>
-                }
+                  @if(tipo.usuario?.id == null || tipo.usuario?.id == usuLogado){
+                    <mat-option [value]="tipo">
+                      {{ tipo.nome }}
+                    </mat-option>
+                  }
               }
             </mat-select>
             <mat-error class="form-error">Tipo alimentício é obrigatório.</mat-error>
