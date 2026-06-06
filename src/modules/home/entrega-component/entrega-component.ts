@@ -455,8 +455,9 @@ export class EntregaComponent {
 
 
     criadoPorUserProd.forEach((row) => {
+      let data: string = new Date(row.entrega.dataentrega).toISOString().split('T')[0]
       const dataRow = [
-        row.entrega.dataentrega,
+        data,
         row.entrega.edital.nome,
         row.tipo.nome,
         row.qtd,
@@ -481,7 +482,7 @@ export class EntregaComponent {
         canvas.height = img.height;
 
         var ctx = canvas.getContext("2d");
-        if(!ctx){
+        if (!ctx) {
           throw new Error('canvas context could not be initialized');
         }
         ctx.drawImage(img, 0, 0);
@@ -503,39 +504,61 @@ export class EntregaComponent {
     const headerColuna = ['Data de Entrega', 'Edital', 'Alimento', 'Qt.', 'Und.', 'Observação', 'Agricultor']
 
     const body = this.buildTableBody(headerColuna);
+    const now: string = new Date().toISOString().split('T')[0];
 
     if (body.length <= 1) {
       alert("Não há itens para exportar.");
       return;
     }
 
-    const docDefinition: any = {
+    var docDefinition: any = {
+      pageSize: 'A4',
+      pageOrientation: 'portrait',
+      pageMargins: [40, 60, 40, 60],
+      header: function () {
+        return {
+          columns: [
+            {text: 'Controle de Entregas PNAE', alignment: 'left', style: 'headerLeft'},
+            {text: `Relatório criado em ${now}`, alignment: 'right', style: 'headerRight'}
+          ],
+          margin: [40, 20, 40, 0]
+        };
+      },
+      footer: function (currentPage: { toString: () => any; }, pageCount: any) {
+        return {
+          text: `Pág. ${currentPage.toString()} / ${pageCount}`,
+          alignment: 'center',
+          style: 'footer'
+        };
+      },
       content: [
         {
-          image: await this.getBase64ImageFromURL('images/pnae_old_lg.png'),
-          height: 100,
-          margin: [0, 20, 0, 0],
-          alignment: 'right'
-        },
-        {
-          text: `Relatório de Entregas PNAE`,
-          style: 'header'
+          columns: [
+            {
+              image: await this.getBase64ImageFromURL("images/pnae_old_lg.png"), height: 50, alignment: 'left'
+            },
+            {
+              text: "Relatório de Entregas PNAE", style: 'titulo', alignment: 'right'
+            },
+          ]
         },
         {
           style: 'tableExample',
           table: {
-            widths: [30, '*', 100, 20, 20, '*', 70],
+            widths: ['*', '*', 100, 20, 20, '*', '*'],
             body: body
           }
         }
       ],
       styles: {
-        header: {fontSize: 16, bold: true, margin: [0, 0, 0, 15]},
-        tableHeader: {bold: true, fontSize: 11, fillColor: '#858585'},
+        headerLeft: {fontSize: 9, color: '#95a5a6', bold: true},
+        tableHeader: {bold: true, fontSize: 11, fillColor: '#e8e8e8'},
+        headerRight: {fontSize: 9, color: '#95a5a6'},
+        titulo: {fontSize: 22, bold: true, margin: [0, 0, 0, 5]},
+        footer: {fontSize: 9, color: '#7f8c8d'},
         tableExample: {margin: [0, 5, 0, 15]}
       }
     };
-    const now: string = new Date().toISOString().split('T')[0];
     pdfMake.createPdf(docDefinition).download(`relatorio_de_entregas_${now}.pdf`);
   }
 
