@@ -15,6 +15,12 @@ import {CanvasJSAngularChartsModule} from '@canvasjs/angular-charts';
 import {MatButton} from '@angular/material/button';
 import {DatePipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
+import {Cronograma} from '../../../core/models/cronograma';
+
+interface ChartData{
+  x: Date;
+  y: number;
+}
 
 @Component({
   selector: 'app-dashboard-component',
@@ -22,6 +28,7 @@ import {RouterLink} from '@angular/router';
   templateUrl: './dashboard-component.html',
   styleUrl: './dashboard-component.css',
 })
+
 export class DashboardComponent {
 
   constructor(private entregaService: EntregaService, private usuarioService: UsuarioService, private authService: AuthService, private produtoEntregaService: ProdutoentregaService) {
@@ -42,6 +49,47 @@ export class DashboardComponent {
 
   showWelcome = false;
 
+  chartData : ChartData[] = [];
+
+  chartOptions = {
+    title: {
+      text: "Volume de entregas"
+    },
+    plugins: {
+      title: {
+        display: true,
+        font: {
+          family: 'Roboto',
+          size: 20,
+          weight: 'normal'
+        }
+      }
+    },
+    animationEnabled: true,
+    axisY: {
+      includeZero: true
+    },
+    data: [{
+      type: "line",
+      indexLabelFontColor: "#5A5757",
+      dataPoints: this.chartData
+    }],
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          type: 'time',
+          time: {
+            unit: 'month',
+            displayFormats: {
+              month: 'MMM YYYY'
+            }
+          }
+        }
+      }
+    }
+  }
+
   ngOnInit() {
     this.getTempoDoDia()
     this.usuarioService.buscarPorEmail(this.authService.getUserEmail()).subscribe(
@@ -61,6 +109,17 @@ export class DashboardComponent {
                 if(contEntregas == 0){
                   this.showWelcome = true;
                 }
+
+                this.chartData = this.initChart(e);
+
+                this.chartOptions.data = [{
+                  type: "line",
+                  indexLabelFontColor: "#5A5757",
+                  dataPoints: this.chartData
+                }]
+
+                console.log(this.chartOptions.data)
+
               }, error: (err) =>{
                 console.log("Erro: ", err);
               }
@@ -95,6 +154,32 @@ export class DashboardComponent {
       }
     )
   }
+
+  initChart(entregas: Entrega[]){
+
+    const groupsMap = entregas.reduce((acc, item) => {
+      let monthYearStr;
+
+      if(item.usuario.id === this.usuLogado){
+        monthYearStr = new Date(item.dataentrega).toISOString().split('T')[0];
+        console.log(monthYearStr)
+      }
+      if(monthYearStr){
+        if(!acc[monthYearStr]){
+          acc[monthYearStr] = 0;
+        }
+        acc[monthYearStr] = entregas.filter(entrega => entrega.dataentrega == item.dataentrega).length;
+      }
+
+      return acc;
+    }, {} as Record<string, number>);
+    console.log("initchart: ", groupsMap);
+    return Object.keys(groupsMap).map(key => ({
+      x: new Date(key),
+      y: groupsMap[key]
+    }))
+  }
+
 
   clearWelcome() {
     this.showWelcome = false;
