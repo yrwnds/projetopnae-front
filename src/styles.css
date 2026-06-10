@@ -223,6 +223,17 @@ tbody tr:hover{background: #dfe9d8;cursor: pointer; transition: 0.1s ease-in}
   }
 }
 
+@keyframes slideOut{
+  from{
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to{
+    transform: translateY(20px);
+    opacity: 0;
+  }
+}
+
 .modal-header-row{
   display: flex;
   justify-content: space-between;
@@ -245,13 +256,17 @@ tbody tr:hover{background: #dfe9d8;cursor: pointer; transition: 0.1s ease-in}
 
 /* alert */
 
-.alert{
+.alert-box{
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
-  animation: slideIn 0.3s ease-in-out;
+}
+
+.alert-box .alert{
+  margin: 5px;
+  animation: slideIn 0.3s ease-out
 }
 
 /*form*/

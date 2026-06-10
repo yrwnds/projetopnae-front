@@ -27,6 +27,7 @@ import {ReplaySubject, Subject, takeUntil} from 'rxjs';
 registerLocaleData(localePt, 'pt');
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import {RouterLink} from '@angular/router';
 
 (<any>pdfMake).addVirtualFileSystem(pdfFonts);
 
@@ -45,7 +46,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
     NgxMatSelectSearchModule,
     MatSelectModule,
     DatePipe,
-    AsyncPipe
+    AsyncPipe,
   ],
   templateUrl: './entrega-component.html',
   styleUrl: './entrega-component.css',

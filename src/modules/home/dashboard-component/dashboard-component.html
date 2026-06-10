@@ -86,12 +86,16 @@
 <section id="stats-row">
   <div class="card">
     <h4>Entregas do mês</h4>
-    <full-calendar [options]="calendarOptions"></full-calendar>
+    @if (calendarOptions.events) {
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    }
   </div>
 
   <div class="card">
     <div class="chart-container">
-      <canvasjs-chart [options]="chartOptions"]></canvasjs-chart>
+      @if (chartData.length > 0) {
+        <canvasjs-chart [options]="chartOptions"></canvasjs-chart>
+      }
     </div>
   </div>
 </section>

@@ -15,12 +15,12 @@
   </div>
 </section>
 
-@if(formOpen){
+@if (formOpen) {
   <div class="modal-overlay">
     <section class="modal-content card">
-      @if(isEditando){
+      @if (isEditando) {
         <h2>Editar Cronograma</h2>
-      }@else{
+      } @else {
         <h2>Novo Cronograma</h2>
       }
 
@@ -39,10 +39,10 @@
                 <mat-option>
                   <ngx-mat-select-search [formControl]="tipoFiltroCtrl"></ngx-mat-select-search>
                 </mat-option>
-                @for (tipo of tipoFiltrado | async ; track tipo){
-                    <mat-option [value]="tipo">
-                      {{ tipo.nome }}
-                    </mat-option>
+                @for (tipo of tipoFiltrado | async; track tipo) {
+                  <mat-option [value]="tipo">
+                    {{ tipo.nome }}
+                  </mat-option>
                 }
               </mat-select>
               <mat-error class="form-error">Obrigatório.</mat-error>
@@ -50,7 +50,7 @@
           </div>
           <div>
             <mat-form-field class="full-width">
-              <mat-label>Observação</mat-label>
+              <mat-label>Observação (opcional)</mat-label>
               <textarea rows="4" matInput type="text" formControlName="observacao"></textarea>
             </mat-form-field>
           </div>
@@ -63,14 +63,17 @@
             </mat-form-field>
             <mat-form-field>
               <mat-label>Tipo unidade</mat-label>
-              <input matInput type="text" formControlName="tipound">
+              <mat-select formControlName="tipound">
+                <mat-option [value]="'KG'">KG</mat-option>
+                <mat-option [value]="'UND'">UND</mat-option>
+              </mat-select>
               <mat-error class="form-error">Obrigatório.</mat-error>
             </mat-form-field>
           </div>
 
           <div class="action-btns">
             <button class="btn-basic" type="submit">
-              @if(isEditando){
+              @if (isEditando) {
                 Atualizar cronograma
               } @else {
                 Adicionar cronograma
@@ -87,35 +90,35 @@
   </div>
 }
 
-  @if (errorMessage != ''){
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <strong>{{ errorMessage }}</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
-    </div>
-  }
+@if (errorMessage != '') {
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>{{ errorMessage }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+  </div>
+}
 
-  @if (successMessage != ''){
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <strong>{{ successMessage }}</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
-    </div>
-  }
+@if (successMessage != '') {
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{ successMessage }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+  </div>
+}
 
 <section class="table-responsive">
   <table>
-    @for(grupo of cronoAgrupado; track grupo.monthYear){
-          <thead>
-          <tr>
-            <th colspan="5">{{grupo.monthYear | date:"MMMM 'de' yyyy" : 'UTC' : 'pt'}}</th>
-          </tr>
-          </thead>
-      @for(item of grupo.items ; track item.id){
-        @if(item.usuario.id === usuLogado){
+    @for (grupo of cronoAgrupado; track grupo.monthYear) {
+      <thead>
+      <tr>
+        <th colspan="5">{{ grupo.monthYear | date:"MMMM 'de' yyyy" : 'UTC' : 'pt' }}</th>
+      </tr>
+      </thead>
+      @for (item of grupo.items; track item.id) {
+        @if (item.usuario.id === usuLogado) {
           <tbody>
           <tr>
             <td>{{ item.tipo.nome }}</td>
-            <td>{{ item.qtd }} {{item.tipound}}</td>
-            <td>{{ item.observacao}}</td>
+            <td>{{ item.qtd }} {{ item.tipound }}</td>
+            <td>{{ item.observacao }}</td>
             <td class="table-actions">
               <mat-icon fontIcon="edit" (click)="editandocronograma(item)"></mat-icon>
               <mat-icon fontIcon="delete" (click)="excluircronograma(item)"></mat-icon>

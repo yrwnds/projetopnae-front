@@ -183,6 +183,7 @@ export class CronogramaComponent {
         {
           next: () => {
             this.c = this.c.filter(c => c.id !== cronograma.id)
+            this.ngOnInit()
           },
           error: (err) => {
             this.errorMessage = "Erro. " + JSON.stringify(err.error, ['message']);

@@ -1,3 +1,19 @@
+<div class="alert-box">
+  @if (errorMessage != '') {
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <strong>{{ errorMessage }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+    </div>
+  }
+
+  @if (successMessage != '') {
+    <div class="alert alert-success alert-dismissible" role="alert">
+      <strong>{{ successMessage }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
+    </div>
+  }
+</div>
+
 <header>
   <div>
     <h2>Entregas Realizadas</h2>
@@ -19,20 +35,6 @@
     <button class="btn-basic btn-var-border" (click)="generatePdf()"> Exportar <i class="fa-solid fa-arrow-right-from-bracket"></i></button>
   </div>
 </section>
-
-@if (errorMessage != '') {
-  <div class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong>{{ errorMessage }}</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
-  </div>
-}
-
-@if (successMessage != '') {
-  <div class="alert alert-success alert-dismissible fade show" role="alert">
-    <strong>{{ successMessage }}</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="clear()"></button>
-  </div>
-}
 
 @if (openFormEnt) {
   <div class="modal-overlay">
@@ -122,7 +124,7 @@
 
     <tbody>
       @if (p.length === 0) {
-        <p>Clique em uma entrega para mostrar os produtos.</p>
+        <p>Nenhum produto encontrado. Clique em uma entrega para mostrar os produtos.</p>
       } @else {
         @for (p of p; track p.id) {
           <tr>
@@ -154,7 +156,7 @@
       <form [formGroup]="formProd" (ngSubmit)="isEditandoProd? atualizarProduto() : addProduto()">
         <input type="hidden" formControlName="id">
         <mat-form-field class="full-width">
-          <mat-label>Observação</mat-label>
+          <mat-label>Observação (opcional)</mat-label>
           <textarea matInput type="text" formControlName="observacao"></textarea>
         </mat-form-field>
 
@@ -176,9 +178,9 @@
             <mat-label>Tipo alimentício</mat-label>
             <mat-select formControlName="tipo" [compareWith]="compararObjetos">
               <mat-option>
-                <ngx-mat-select-search [formControl]="tipoFiltroCtrl"></ngx-mat-select-search>
+                <ngx-mat-select-search [formControl]="tipoFiltroCtrl" [placeholderLabel]="'Pesquise'" [noEntriesFoundLabel]="'Nenhum resultado encontrado'"></ngx-mat-select-search>
               </mat-option>
-              @for (tipo of tipoFiltrado | async; track tipo) {
+              @for (tipo of tipoFiltrado | async ; track tipo) {
                   @if(tipo.usuario?.id == null || tipo.usuario?.id == usuLogado){
                     <mat-option [value]="tipo">
                       {{ tipo.nome }}
@@ -197,8 +199,11 @@
           </mat-form-field>
           <mat-form-field>
             <mat-label>Tipo de unidade</mat-label>
-            <input matInput type="text" formControlName="tipound">
-            <mat-error class="form-error">Tipo de unidade é obrigatório (Exemplo: Kg, Unidade)</mat-error>
+            <mat-select formControlName="tipound">
+              <mat-option [value]="'KG'">KG</mat-option>
+              <mat-option [value]="'UND'">UND</mat-option>
+            </mat-select>
+            <mat-error class="form-error">Tipo de unidade é obrigatório</mat-error>
           </mat-form-field>
         </div>
         <div class="action-btns">

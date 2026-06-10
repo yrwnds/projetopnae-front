@@ -49,7 +49,7 @@
 @if (formOpen) {
   <div class="modal-overlay">
     <section class="modal-content card">
-      <h2>Novo Edital</h2>
+      <h2>Novo Agricultor</h2>
       <form [formGroup]="form" (ngSubmit)="isEditando? atualizarAgricultor() : adicionarAgricultor()">
         <input type="hidden" formControlName="id">
         <mat-form-field class="full-width">
