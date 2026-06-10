@@ -74,19 +74,17 @@ export class DashboardComponent {
       indexLabelFontColor: "#5A5757",
       dataPoints: this.chartData
     }],
-    options: {
-      responsive: true,
-      scales: {
-        x: {
-          type: 'time',
-          time: {
-            unit: 'month',
-            displayFormats: {
-              month: 'MMM YYYY'
-            }
-          }
+    axisX: {
+      type: 'time',
+      time: {
+        unit: 'month',
+        displayFormats: {
+          month: 'MMM YYYY'
         }
       }
+    },
+    options: {
+      responsive: true,
     }
   }
 
