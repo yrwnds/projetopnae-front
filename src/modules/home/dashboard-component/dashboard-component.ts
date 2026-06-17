@@ -153,19 +153,6 @@ export class DashboardComponent {
     )
   }
 
-  goToEdital() {
-    this.router.navigate(["edital"], { relativeTo: this.r.parent });
-  }
-
-  goToCronograma(){
-    this.router.navigate(["cronograma"], { relativeTo: this.r.parent });
-
-  }
-
-  goToEntrega(){
-    this.router.navigate(["entrega"], { relativeTo: this.r.parent });
-  }
-
   initChart(entregas: Entrega[]){
 
     const groupsMap = entregas.reduce((acc, item) => {
