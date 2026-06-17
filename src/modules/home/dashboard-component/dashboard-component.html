@@ -66,18 +66,18 @@
   </div>
 }
 
-<section class="btn-cards" routerLink="../entrega">
+<section class="btn-cards" (click)="goToEntrega()">
   <button class="btn-card" style="background-color: #30A26B;">
     <h2>Registrar nova entrega de alimento</h2>
     <i class="fa-solid fa-chevron-right"></i>
   </button>
 
-  <button class="btn-card" routerLink="../cronograma" style="background-color: #ADD52B;">
+  <button class="btn-card" (click)="goToCronograma()" style="background-color: #ADD52B;">
     <h2>Registrar cronograma de entrega</h2>
     <i class="fa-solid fa-chevron-right"></i>
   </button>
 
-  <button class="btn-card" routerLink="../edital" style="background-color: #D0DA48;">
+  <button class="btn-card" (click)="goToEdital()" style="background-color: #D0DA48;">
     <h2>Registrar novo Edital</h2>
     <i class="fa-solid fa-chevron-right"></i>
   </button>

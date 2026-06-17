@@ -14,7 +14,7 @@ import {ProdutoentregaService} from '../../../core/services/produtoentrega-servi
 import {CanvasJSAngularChartsModule} from '@canvasjs/angular-charts';
 import {MatButton} from '@angular/material/button';
 import {DatePipe} from '@angular/common';
-import {RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {Cronograma} from '../../../core/models/cronograma';
 
 interface ChartData{
@@ -31,7 +31,7 @@ interface ChartData{
 
 export class DashboardComponent {
 
-  constructor(private entregaService: EntregaService, private usuarioService: UsuarioService, private authService: AuthService, private produtoEntregaService: ProdutoentregaService) {
+  constructor(private router: Router, private r: ActivatedRoute, private entregaService: EntregaService, private usuarioService: UsuarioService, private authService: AuthService, private produtoEntregaService: ProdutoentregaService) {
   }
 
   usuLogado = 0
@@ -151,6 +151,19 @@ export class DashboardComponent {
         }
       }
     )
+  }
+
+  goToEdital() {
+    this.router.navigate(["edital"], { relativeTo: this.r.parent });
+  }
+
+  goToCronograma(){
+    this.router.navigate(["cronograma"], { relativeTo: this.r.parent });
+
+  }
+
+  goToEntrega(){
+    this.router.navigate(["entrega"], { relativeTo: this.r.parent });
   }
 
   initChart(entregas: Entrega[]){

@@ -37,7 +37,8 @@
               <mat-label>Tipo alimentício</mat-label>
               <mat-select formControlName="tipo" [compareWith]="compararObjetos">
                 <mat-option>
-                  <ngx-mat-select-search [formControl]="tipoFiltroCtrl"></ngx-mat-select-search>
+                  <ngx-mat-select-search [formControl]="tipoFiltroCtrl" [placeholderLabel]="'Pesquise'"
+                                         [noEntriesFoundLabel]="'Nenhum resultado encontrado'"></ngx-mat-select-search>
                 </mat-option>
                 @for (tipo of tipoFiltrado | async; track tipo) {
                   <mat-option [value]="tipo">

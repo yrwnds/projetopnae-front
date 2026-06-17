@@ -32,7 +32,8 @@
   </div>
   <div class="action-btns">
     <button class="btn-basic" (click)="entOpenForm()">Adicionar <i class="fa-solid fa-plus"></i></button>
-    <button class="btn-basic btn-var-border" (click)="generatePdf()"> Exportar <i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+    <button class="btn-basic btn-var-border" (click)="generatePdf()"> Exportar <i
+      class="fa-solid fa-arrow-right-from-bracket"></i></button>
   </div>
 </section>
 
@@ -51,7 +52,7 @@
           <mat-label>Edital</mat-label>
           <mat-select formControlName="edital" [compareWith]="compararObjetos">
             @for (ed of ed; track ed.id) {
-              @if(ed.usuario.id === usuLogado){
+              @if (ed.usuario?.id === usuLogado) {
                 <mat-option [value]="ed">
                   {{ ed.nome }}
                 </mat-option>
@@ -165,7 +166,7 @@
             <mat-label>Agricultor</mat-label>
             <mat-select formControlName="agricultor" [compareWith]="compararObjetos">
               @for (agr of a; track agr.id) {
-                @if(agr.usuario.id === usuLogado){
+                @if (agr.usuario.id === usuLogado) {
                   <mat-option [value]="agr">
                     {{ agr.nome }}
                   </mat-option>
@@ -178,14 +179,15 @@
             <mat-label>Tipo alimentício</mat-label>
             <mat-select formControlName="tipo" [compareWith]="compararObjetos">
               <mat-option>
-                <ngx-mat-select-search [formControl]="tipoFiltroCtrl" [placeholderLabel]="'Pesquise'" [noEntriesFoundLabel]="'Nenhum resultado encontrado'"></ngx-mat-select-search>
+                <ngx-mat-select-search [formControl]="tipoFiltroCtrl" [placeholderLabel]="'Pesquise'"
+                                       [noEntriesFoundLabel]="'Nenhum resultado encontrado'"></ngx-mat-select-search>
               </mat-option>
-              @for (tipo of tipoFiltrado | async ; track tipo) {
-                  @if(tipo.usuario?.id == null || tipo.usuario?.id == usuLogado){
-                    <mat-option [value]="tipo">
-                      {{ tipo.nome }}
-                    </mat-option>
-                  }
+              @for (tipo of tipoFiltrado | async; track tipo) {
+                @if (tipo.usuario?.id == null || tipo.usuario?.id == usuLogado) {
+                  <mat-option [value]="tipo">
+                    {{ tipo.nome }}
+                  </mat-option>
+                }
               }
             </mat-select>
             <mat-error class="form-error">Tipo alimentício é obrigatório.</mat-error>
