@@ -155,12 +155,6 @@
         }
       </h2>
       <form [formGroup]="formProd" (ngSubmit)="isEditandoProd? atualizarProduto() : addProduto()">
-        <input type="hidden" formControlName="id">
-        <mat-form-field class="full-width">
-          <mat-label>Observação (opcional)</mat-label>
-          <textarea matInput type="text" formControlName="observacao"></textarea>
-        </mat-form-field>
-
         <div class="filter-row">
           <mat-form-field>
             <mat-label>Agricultor</mat-label>
@@ -207,7 +201,12 @@
             </mat-select>
             <mat-error class="form-error">Tipo de unidade é obrigatório</mat-error>
           </mat-form-field>
+          <input type="hidden" formControlName="id">
         </div>
+        <mat-form-field class="full-width">
+          <mat-label>Observação (opcional)</mat-label>
+          <textarea matInput type="text" formControlName="observacao"></textarea>
+        </mat-form-field>
         <div class="action-btns">
           <button class="btn-basic" type="submit">
             @if (isEditandoProd) {
