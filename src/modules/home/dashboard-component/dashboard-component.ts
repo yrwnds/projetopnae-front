@@ -52,9 +52,6 @@ export class DashboardComponent {
   chartData : ChartData[] = [];
 
   chartOptions = {
-    title: {
-      text: "Volume de entregas"
-    },
     plugins: {
       title: {
         display: true,
