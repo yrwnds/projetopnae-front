@@ -9,7 +9,7 @@ import {CronogramaService} from '../../../core/services/cronograma-service';
 import {Tipoalimenticio} from '../../../core/models/tipoalimenticio';
 import {Cronograma} from '../../../core/models/cronograma';
 import {TipoalimenticioService} from '../../../core/services/tipoalimenticio-service';
-import {AsyncPipe, registerLocaleData} from '@angular/common';
+import {AsyncPipe, formatDate, registerLocaleData} from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import {DatePipe} from '@angular/common';
 import moment from 'moment/moment';
@@ -90,7 +90,7 @@ export class CronogramaComponent {
         next: (c) => {
           this.c = c;
           this.cronoAgrupado = this.agruparCronogramaPorMesAno(this.c);
-          console.log(this.cronoAgrupado)
+          console.log("crono: ", this.cronoAgrupado)
         },
         error: (err) => {
           console.error('Erro ao buscar cronogramas: ', err);
@@ -119,7 +119,7 @@ export class CronogramaComponent {
       const groupsMap = sorted.reduce((acc, item) => {
         let monthYearStr;
         if(item.usuario.id === this.usuLogado){
-          monthYearStr = item.previsaoentrega.toLocaleString('default', {month: 'long'})
+          monthYearStr = formatDate(item.previsaoentrega, 'yyyy-MM', 'pt-br', 'utc')
         }
         if(monthYearStr){
           if(!acc[monthYearStr]){
