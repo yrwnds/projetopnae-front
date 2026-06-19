@@ -8,7 +8,7 @@ WORKDIR /app
 
 COPY --from=cloner /source/package*.json ./
 
-RUN npm ci
+RUN npm install
 
 COPY --from=cloner /source/ .
 
