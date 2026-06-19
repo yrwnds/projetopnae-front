@@ -13,18 +13,18 @@ import {ProdutoentregaService} from '../../../core/services/produtoentrega-servi
 
 import {CanvasJSAngularChartsModule} from '@canvasjs/angular-charts';
 import {MatButton} from '@angular/material/button';
-import {DatePipe} from '@angular/common';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {CommonModule, DatePipe} from '@angular/common';
+import {ActivatedRoute, Router, RouterLink, RouterModule} from '@angular/router';
 import {Cronograma} from '../../../core/models/cronograma';
 
-interface ChartData{
+interface ChartData {
   x: Date;
   y: number;
 }
 
 @Component({
   selector: 'app-dashboard-component',
-  imports: [FullCalendarModule, CanvasJSAngularChartsModule, MatButton, DatePipe, RouterLink],
+  imports: [FullCalendarModule, CanvasJSAngularChartsModule, MatButton, DatePipe, RouterLink, RouterModule, CommonModule],
   templateUrl: './dashboard-component.html',
   styleUrl: './dashboard-component.css',
 })
@@ -49,7 +49,7 @@ export class DashboardComponent {
 
   showWelcome = false;
 
-  chartData : ChartData[] = [];
+  chartData: ChartData[] = [];
 
   chartOptions = {
     plugins: {
@@ -97,11 +97,11 @@ export class DashboardComponent {
               next: (e) => {
                 let contEntregas = 0;
                 for (const ent of e) {
-                  if (ent.usuario.id == this.usuLogado){
+                  if (ent.usuario.id == this.usuLogado) {
                     contEntregas = contEntregas + 1;
                   }
                 }
-                if(contEntregas == 0){
+                if (contEntregas == 0) {
                   this.showWelcome = true;
                 }
 
@@ -115,7 +115,7 @@ export class DashboardComponent {
 
                 console.log(this.chartOptions.data)
 
-              }, error: (err) =>{
+              }, error: (err) => {
                 console.log("Erro: ", err);
               }
             }
@@ -130,17 +130,17 @@ export class DashboardComponent {
           console.log(this.e)
           this.calendarOptions = {
             events: this.e.map((e) => {
-              if (e.usuario.id === this.usuLogado) {
-                return ({
-                  id: e.id.toString(),
-                  title: e.edital.nome,
-                  date: moment.utc(e.dataentrega).format("YYYY-MM-DD")
-                })
-              } else {
-                return ({title: '', date: ''});
+                if (e.usuario.id === this.usuLogado) {
+                  return ({
+                    id: e.id.toString(),
+                    title: e.edital.nome,
+                    date: moment.utc(e.dataentrega).format("YYYY-MM-DD")
+                  })
+                } else {
+                  return ({title: '', date: ''});
+                }
               }
-            }
-        )
+            )
           }
         },
         error: (err) => {
@@ -150,17 +150,17 @@ export class DashboardComponent {
     )
   }
 
-  initChart(entregas: Entrega[]){
+  initChart(entregas: Entrega[]) {
 
     const groupsMap = entregas.reduce((acc, item) => {
       let monthYearStr;
 
-      if(item.usuario.id === this.usuLogado){
+      if (item.usuario.id === this.usuLogado) {
         monthYearStr = new Date(item.dataentrega).toISOString().split('T')[0];
         console.log(monthYearStr)
       }
-      if(monthYearStr){
-        if(!acc[monthYearStr]){
+      if (monthYearStr) {
+        if (!acc[monthYearStr]) {
           acc[monthYearStr] = 0;
         }
         acc[monthYearStr] = entregas.filter(entrega => entrega.dataentrega == item.dataentrega).length;
