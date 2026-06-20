@@ -143,6 +143,20 @@ export class CronogramaComponent {
         {
           next: (c) => {
             this.c = c;
+            this.cronoAgrupado = this.agruparCronogramaPorMesAno(c);
+          },
+          error: (err) => {
+            console.error('Erro ao buscar cronogramas: ', err)
+          }
+        }
+      )
+    } else{
+      this.cronogramaService.buscarPorAny(text).subscribe(
+        {
+          next: (c) => {
+            console.log('entrou em buscar any')
+            this.c = c;
+            this.cronoAgrupado = this.agruparCronogramaPorMesAno(c);
           },
           error: (err) => {
             console.error('Erro ao buscar cronogramas: ', err)
@@ -150,16 +164,7 @@ export class CronogramaComponent {
         }
       )
     }
-    this.cronogramaService.buscarPorAny(text).subscribe(
-      {
-        next: (c) => {
-          this.c = c;
-        },
-        error: (err) => {
-          console.error('Erro ao buscar cronogramas: ', err)
-        }
-      }
-    )
+
   }
 
 
